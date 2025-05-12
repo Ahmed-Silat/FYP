@@ -7,6 +7,7 @@ import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 import Sidebar from "./Components/Sidebar";
 import CandidateJobCards from "./Components/CandidateJobCards";
 import SortBy from "./Components/SortBy";
+import Searchbar from "./Components/Searchbar";
 function App() {
   return (
     <>
@@ -19,7 +20,8 @@ function App() {
       </BrowserRouter> */}
       {/* <Sidebar /> */}
       {/* <CandidateJobCards /> */}
-      <SortBy />
+      {/* <SortBy /> */}
+      <Searchbar />
     </>
   );
 }
