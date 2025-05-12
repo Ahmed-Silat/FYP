@@ -4,16 +4,20 @@ import Login from "./pages/login-signup/Login";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Signup from "./pages/login-signup/Signup";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
+import Sidebar from "./Components/Sidebar";
+import CandidateJobCards from "./Components/CandidateJobCards";
 function App() {
   return (
     <>
-      <BrowserRouter>
+      {/* <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<CandidateDashboard />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> */}
+      {/* <Sidebar /> */}
+      <CandidateJobCards />
     </>
   );
 }
