@@ -8,6 +8,7 @@ import Sidebar from "./Components/Sidebar";
 import CandidateJobCards from "./Components/CandidateJobCards";
 import SortBy from "./Components/SortBy";
 import Searchbar from "./Components/Searchbar";
+import CandidateResultsTable from "./Components/CandidateResultsTable";
 function App() {
   return (
     <>
@@ -21,7 +22,8 @@ function App() {
       {/* <Sidebar /> */}
       {/* <CandidateJobCards /> */}
       {/* <SortBy /> */}
-      <Searchbar />
+      {/* <Searchbar /> */}
+      <CandidateResultsTable />
     </>
   );
 }
