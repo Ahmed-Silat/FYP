@@ -10,6 +10,7 @@ import SortBy from "./Components/SortBy";
 import Searchbar from "./Components/Searchbar";
 import CandidateResultsTable from "./Components/CandidateResultsTable";
 import Profile from "./pages/user-profile/Profile";
+import HrResponsesTable from "./Components/HrResponsesTable";
 function App() {
   return (
     <>
@@ -25,7 +26,8 @@ function App() {
       {/* <SortBy /> */}
       {/* <Searchbar /> */}
       {/* <CandidateResultsTable /> */}
-      <Profile />
+      {/* <Profile /> */}
+      <HrResponsesTable />
     </>
   );
 }
