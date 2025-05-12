@@ -11,6 +11,7 @@ import Searchbar from "./Components/Searchbar";
 import CandidateResultsTable from "./Components/CandidateResultsTable";
 import Profile from "./pages/user-profile/Profile";
 import HrResponsesTable from "./Components/HrResponsesTable";
+import AdminHrManagement from "./Components/AdminHrManagement";
 function App() {
   return (
     <>
@@ -27,7 +28,8 @@ function App() {
       {/* <Searchbar /> */}
       {/* <CandidateResultsTable /> */}
       {/* <Profile /> */}
-      <HrResponsesTable />
+      {/* <HrResponsesTable /> */}
+      <AdminHrManagement />
     </>
   );
 }
