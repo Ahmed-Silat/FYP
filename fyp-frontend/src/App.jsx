@@ -6,6 +6,7 @@ import Signup from "./pages/login-signup/Signup";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 import Sidebar from "./Components/Sidebar";
 import CandidateJobCards from "./Components/CandidateJobCards";
+import SortBy from "./Components/SortBy";
 function App() {
   return (
     <>
@@ -17,7 +18,8 @@ function App() {
         </Routes>
       </BrowserRouter> */}
       {/* <Sidebar /> */}
-      <CandidateJobCards />
+      {/* <CandidateJobCards /> */}
+      <SortBy />
     </>
   );
 }
