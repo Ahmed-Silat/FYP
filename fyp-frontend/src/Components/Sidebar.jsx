@@ -1,31 +1,34 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { FaRegFileAlt } from "react-icons/fa";
 import { CiSettings } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
 
 const Sidebar = () => {
+  const linkClasses = ({ isActive }) =>
+    `flex items-center gap-4 p-2 rounded-lg transition-all cursor-pointer ${
+      isActive ? "bg-gray-700" : "hover:bg-gray-700"
+    }`;
+
   return (
     <div className="flex flex-col justify-between items-center bg-gray-900 text-white h-screen w-20 md:w-60 p-4 shadow-lg">
       {/* Top section with menu items */}
       <div className="flex flex-col gap-6 w-full">
-        {/* Dashboard */}
-        <div className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700 cursor-pointer transition-all">
+        <NavLink to="/candidate/dashboard" className={linkClasses}>
           <MdDashboard size={24} />
           <span className="hidden md:inline">Dashboard</span>
-        </div>
+        </NavLink>
 
-        {/* Results */}
-        <div className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700 cursor-pointer transition-all">
+        <NavLink to="/candidate/results" className={linkClasses}>
           <FaRegFileAlt size={22} />
           <span className="hidden md:inline">Results</span>
-        </div>
+        </NavLink>
 
-        {/* Profile */}
-        <div className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700 cursor-pointer transition-all">
+        <NavLink to="/candidate/profile" className={linkClasses}>
           <CiSettings size={24} />
           <span className="hidden md:inline">Profile</span>
-        </div>
+        </NavLink>
       </div>
 
       {/* Bottom logout button */}
