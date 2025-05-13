@@ -14,6 +14,11 @@ const AdminLayout = () => {
       icon: <MdDashboard size={24} />,
     },
     {
+      to: "/admin/hr-management",
+      label: "HR Management",
+      icon: <RxPerson size={24} />,
+    },
+    {
       to: "/admin/candidates",
       label: "Candidates",
       icon: <FaRegFileAlt size={22} />,
@@ -22,11 +27,6 @@ const AdminLayout = () => {
       to: "/admin/profile",
       label: "Profile",
       icon: <CiSettings size={24} />,
-    },
-    {
-      to: "/admin/hr-management",
-      label: "HR Management",
-      icon: <RxPerson size={24} />,
     },
   ];
   return (
