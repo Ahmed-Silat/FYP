@@ -12,25 +12,36 @@ const Responses = () => {
   ];
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-          Hi, <span className="text-blue-600">HR Manager!</span>
+    <div className="p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen">
+      {/* Welcome Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-800">
+          Welcome back, <span className="text-blue-600">HR Manager!</span>
         </h2>
-        <p className="text-sm md:text-base text-gray-500 mt-1">
-          Welcome back to your dashboard
+        <p className="mt-1 text-gray-500 text-sm md:text-base">
+          Here's a quick look at the latest candidate responses.
         </p>
       </div>
 
-      {/* Search and Sort Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-        <Searchbar />
+      {/* Controls Section */}
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+        <Searchbar placeholder="Search candidates..." />
         <TableSort options={sortOptions} />
       </div>
 
-      {/* Table Section */}
-      <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 overflow-x-auto">
+      {/* Main Content Card */}
+      <div className="bg-white rounded-2xl shadow-lg p-5 md:p-8 w-full overflow-x-auto">
+        {/* Section Header */}
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold text-gray-800">
+            Candidate Responses
+          </h3>
+          <p className="text-sm text-gray-500">
+            Review and manage video responses submitted by candidates
+          </p>
+        </div>
+
+        {/* Data Table */}
         <HrResponsesTable />
       </div>
     </div>
