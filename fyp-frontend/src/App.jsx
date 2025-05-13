@@ -12,6 +12,7 @@ import CandidateResultsTable from "./Components/CandidateResultsTable";
 import Profile from "./pages/user-profile/Profile";
 import HrResponsesTable from "./Components/HrResponsesTable";
 import AdminHrManagement from "./Components/AdminHrManagement";
+import AdminCandidateManagement from "./Components/AdminCandidateManagement";
 function App() {
   return (
     <>
@@ -29,7 +30,8 @@ function App() {
       {/* <CandidateResultsTable /> */}
       {/* <Profile /> */}
       {/* <HrResponsesTable /> */}
-      <AdminHrManagement />
+      {/* <AdminHrManagement /> */}
+      <AdminCandidateManagement />
     </>
   );
 }
