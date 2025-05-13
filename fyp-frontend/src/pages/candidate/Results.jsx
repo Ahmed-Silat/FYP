@@ -4,6 +4,12 @@ import CandidateResultsTable from "../../Components/CandidateResultsTable";
 import TableSort from "../../Components/TableSort";
 
 const Results = () => {
+  const sortOptions = [
+    { label: "Job Title", value: "jobTitle" },
+    { label: "Company", value: "company" },
+    { label: "Applied Date", value: "appliedDate" },
+    { label: "Status", value: "status" },
+  ];
   return (
     <div className="p-4 md:p-6 lg:p-8 w-full min-h-screen bg-gray-100">
       {/* Header and Controls */}
@@ -19,7 +25,7 @@ const Results = () => {
         {/* Search + Sort controls */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Searchbar />
-          <TableSort />
+          <TableSort options={sortOptions} />
         </div>
       </div>
 
