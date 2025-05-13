@@ -15,6 +15,7 @@ import AdminHrManagement from "./Components/AdminHrManagement";
 import AdminCandidateManagement from "./Components/AdminCandidateManagement";
 import CandidateLayout from "./Components/CandidateLayout";
 import Results from "./pages/candidate/Results";
+import HrJobCards from "./Components/HrJobCards";
 function App() {
   return (
     <>
@@ -35,16 +36,17 @@ function App() {
       {/* <AdminHrManagement /> */}
       {/* <AdminCandidateManagement /> */}
       {/* <CandidateDashboard /> */}
-      <Router>
+      {/* <Router>
         <Routes>
-          {/* Candidate Layout Route */}
           <Route path="/candidate" element={<CandidateLayout />}>
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="results" element={<Results />} />
           </Route>
         </Routes>
-      </Router>
+      </Router> */}
+
+      <HrJobCards />
     </>
   );
 }
