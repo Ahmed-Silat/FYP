@@ -22,6 +22,7 @@ import Responses from "./pages/hr/Responses";
 import Candidates from "./pages/admin/Candidates";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import HRManagement from "./pages/admin/HRManagement";
+import AdminLayout from "./Components/AdminLayout";
 function App() {
   return (
     <>
@@ -56,7 +57,7 @@ function App() {
             <Route path="responses" element={<Responses />} />
           </Route>
 
-          <Route path="/admin" element={<HrLayout />}>
+          <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="candidates" element={<Candidates />} />
