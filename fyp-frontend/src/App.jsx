@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Login from "./pages/login-signup/Login";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter as Router, Route, Routes } from "react-router";
 import Signup from "./pages/login-signup/Signup";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 import Sidebar from "./Components/Sidebar";
@@ -13,6 +13,8 @@ import Profile from "./pages/user-profile/Profile";
 import HrResponsesTable from "./Components/HrResponsesTable";
 import AdminHrManagement from "./Components/AdminHrManagement";
 import AdminCandidateManagement from "./Components/AdminCandidateManagement";
+import CandidateLayout from "./Components/CandidateLayout";
+import Results from "./pages/candidate/Results";
 function App() {
   return (
     <>
@@ -31,7 +33,18 @@ function App() {
       {/* <Profile /> */}
       {/* <HrResponsesTable /> */}
       {/* <AdminHrManagement /> */}
-      <AdminCandidateManagement />
+      {/* <AdminCandidateManagement /> */}
+      {/* <CandidateDashboard /> */}
+      <Router>
+        <Routes>
+          {/* Candidate Layout Route */}
+          <Route path="/candidate" element={<CandidateLayout />}>
+            <Route path="dashboard" element={<CandidateDashboard />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="results" element={<Results />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 }
