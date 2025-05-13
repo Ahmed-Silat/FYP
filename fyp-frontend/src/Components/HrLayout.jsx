@@ -1,4 +1,9 @@
 import React from "react";
+import { CiSettings } from "react-icons/ci";
+import { FaRegFileAlt } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
+import Sidebar from "./Sidebar";
+import { Outlet } from "react-router";
 
 const HrLayout = () => {
   const hrLinks = [
