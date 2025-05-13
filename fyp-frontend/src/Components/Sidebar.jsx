@@ -8,34 +8,6 @@ const Sidebar = ({ links = [], onLogout }) => {
       isActive ? "bg-gray-700" : "hover:bg-gray-700"
     }`;
 
-  // const adminLinks = [
-  //   {
-  //     to: "/admin/overview",
-  //     label: "Overview",
-  //     icon: <MdDashboard size={24} />,
-  //   },
-  //   { to: "/admin/users", label: "Users", icon: <FaRegFileAlt size={22} /> },
-  //   {
-  //     to: "/admin/settings",
-  //     label: "Settings",
-  //     icon: <CiSettings size={24} />,
-  //   },
-  // ];
-
-  // const hrLinks = [
-  //   {
-  //     to: "/hr/dashboard",
-  //     label: "Dashboard",
-  //     icon: <MdDashboard size={24} />,
-  //   },
-  //   {
-  //     to: "/hr/applications",
-  //     label: "Applications",
-  //     icon: <FaRegFileAlt size={22} />,
-  //   },
-  //   { to: "/hr/settings", label: "Settings", icon: <CiSettings size={24} /> },
-  // ];
-
   return (
     <div className="flex flex-col justify-between items-center bg-gray-900 text-white h-screen w-20 md:w-60 p-4 shadow-lg">
       {/* Top section with menu items */}

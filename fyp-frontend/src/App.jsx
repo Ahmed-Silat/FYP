@@ -19,6 +19,9 @@ import HrJobCards from "./Components/HrJobCards";
 import HrLayout from "./Components/HrLayout";
 import HrDashboard from "./pages/hr/HrDashboard";
 import Responses from "./pages/hr/Responses";
+import Candidates from "./pages/admin/Candidates";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import HRManagement from "./pages/admin/HRManagement";
 function App() {
   return (
     <>
@@ -51,6 +54,13 @@ function App() {
             <Route path="dashboard" element={<HrDashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="responses" element={<Responses />} />
+          </Route>
+
+          <Route path="/admin" element={<HrLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="candidates" element={<Candidates />} />
+            <Route path="hr-management" element={<HRManagement />} />
           </Route>
         </Routes>
       </Router>
