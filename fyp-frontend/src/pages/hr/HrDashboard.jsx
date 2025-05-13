@@ -18,7 +18,7 @@ const HrDashboard = () => {
         </div>
 
         <div className="w-full md:w-auto">
-          <Searchbar />
+          <Searchbar placeholder={"Search jobs..."} />
         </div>
 
         <div>
