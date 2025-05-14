@@ -3,21 +3,36 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineCalendar } from "react-icons/hi";
 
-const HrJobCards = () => {
+const HrJobCards = ({ onEditJob }) => {
+  // Accept onEditJob prop
   const jobData = [
     {
+      id: 1, // Added ID field
       title: "Frontend Developer",
       postedOn: "May 10, 2023",
       description:
         "We are looking for a skilled Frontend Developer with experience in React and TypeScript to join our growing team. Strong CSS knowledge is a plus.",
       tags: ["React", "TypeScript", "CSS"],
+      questions: [
+        // Added questions array
+        "What is your experience with React?",
+        "How do you handle state management?",
+        "Describe your CSS methodology",
+      ],
     },
     {
+      id: 2, // Added ID field
       title: "Full Stack Engineer",
       postedOn: "May 5, 2023",
       description:
         "Join our team as a Full Stack Engineer working on our flagship product. You will be responsible for both frontend and backend development.",
-      tags: ["React", "TypeScript", "CSS"],
+      tags: ["React", "Node.js", "MongoDB"],
+      questions: [
+        // Added questions array
+        "Explain your full-stack experience",
+        "How do you optimize API performance?",
+        "Describe a challenging bug you fixed",
+      ],
     },
   ];
 
@@ -43,6 +58,7 @@ const HrJobCards = () => {
               <FaRegEdit
                 className="hover:text-blue-600 cursor-pointer"
                 size={18}
+                onClick={() => onEditJob(job)} // Call onEditJob with job data
               />
               <MdDeleteOutline
                 className="hover:text-red-600 cursor-pointer"
