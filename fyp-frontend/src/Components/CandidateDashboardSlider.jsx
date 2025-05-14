@@ -41,7 +41,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-red-500 transition-colors"
+            className="text-gray-500 hover:text-red-500 transition-colors hover:cursor-pointer"
           >
             <FaTimes className="text-xl" />
           </button>
