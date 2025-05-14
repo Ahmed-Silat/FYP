@@ -6,13 +6,13 @@ import { IoIosAdd } from "react-icons/io";
 const HRManagement = () => {
   return (
     <div className="p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
-      {/* Greeting and Actions */}
+      {/* Management Table Header */}
       <div className="mb-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-          Hi, <span className="text-blue-600">Admin User!</span>
+        <h2 className="text-2xl md:text-3xl font-semibold text-blue-600">
+          HR Management
         </h2>
         <p className="text-sm md:text-base text-gray-500 mt-1">
-          Manage HR roles and access
+          Manage roles, edit profiles, and oversee HR operations.
         </p>
       </div>
 
@@ -23,16 +23,6 @@ const HRManagement = () => {
           <IoIosAdd size={20} />
           Add HR
         </button>
-      </div>
-
-      {/* Management Table Header */}
-      <div className="mb-4">
-        <h3 className="text-lg md:text-xl font-semibold text-gray-800">
-          HR Management
-        </h3>
-        <p className="text-sm text-gray-500">
-          View and control your HR team’s permissions and details
-        </p>
       </div>
 
       {/* Table Container */}

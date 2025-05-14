@@ -17,11 +17,12 @@ const Results = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
         {/* Greeting Section */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">
-            Hi, <span className="text-blue-600">Candidate Name!</span>
+          <h2 className="text-3xl font-bold text-blue-600">
+            Your Application Activity
           </h2>
           <p className="mt-1 text-gray-500 text-sm md:text-base">
-            Here are your job application results 👇
+            Track your submitted responses and stay updated on your application
+            status.
           </p>
         </div>
 
