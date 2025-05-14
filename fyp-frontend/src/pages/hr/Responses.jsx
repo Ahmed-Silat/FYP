@@ -15,11 +15,11 @@ const Responses = () => {
     <div className="p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen">
       {/* Welcome Header */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">
-          Welcome back, <span className="text-blue-600">HR Manager!</span>
+        <h2 className="text-3xl font-bold text-blue-600">
+          Candidate Responses
         </h2>
         <p className="mt-1 text-gray-500 text-sm md:text-base">
-          Here's a quick look at the latest candidate responses.
+          Track, review, and evaluate candidate video submissions.
         </p>
       </div>
 
