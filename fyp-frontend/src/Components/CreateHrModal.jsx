@@ -113,7 +113,7 @@ const CreateHrModal = ({ onClose }) => {
                 className={`w-full px-4 py-2 border ${
                   errors.name ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
-                placeholder="John Doe"
+                placeholder="Enter Full Name"
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -136,7 +136,7 @@ const CreateHrModal = ({ onClose }) => {
                 className={`w-full px-4 py-2 border ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
-                placeholder="john@example.com"
+                placeholder="email@example.com"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
