@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { FaRegEdit, FaRegSave } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import EditHrModal from "./EditHrModal";
+import DeleteModal from "./DeleteModal";
 
 const AdminHrManagement = () => {
   const [data, setData] = useState([
@@ -22,18 +23,29 @@ const AdminHrManagement = () => {
     },
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedHr, setSelectedHr] = useState(null);
 
   const handleEdit = (hr) => {
     setSelectedHr(hr);
-    setIsModalOpen(true);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteClick = (hr) => {
+    setSelectedHr(hr);
+    setDeleteModalOpen(true);
   };
 
   const handleSave = (updatedData) => {
     setData(
       data.map((item) => (item.email === selectedHr.email ? updatedData : item))
     );
+  };
+
+  const handleDeleteConfirm = () => {
+    setData(data.filter((item) => item.email !== selectedHr.email));
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -65,7 +77,10 @@ const AdminHrManagement = () => {
                     >
                       <FaRegEdit className="text-blue-600" />
                     </button>
-                    <button className="p-2 rounded-full hover:bg-red-100 cursor-pointer transition">
+                    <button
+                      onClick={() => handleDeleteClick(item)}
+                      className="p-2 rounded-full hover:bg-red-100 cursor-pointer transition"
+                    >
                       <MdDeleteOutline className="text-red-600" />
                     </button>
                   </div>
@@ -77,11 +92,21 @@ const AdminHrManagement = () => {
       </div>
 
       {/* Edit Modal */}
-      {isModalOpen && (
+      {editModalOpen && (
         <EditHrModal
           hrData={selectedHr}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setEditModalOpen(false)}
           onSave={handleSave}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {deleteModalOpen && (
+        <DeleteModal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          message={`This will permanently remove this HR member from the system. This action cannot be undone.`}
         />
       )}
     </>
