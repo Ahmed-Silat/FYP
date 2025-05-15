@@ -1,7 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import HrResponsesModal from "./hrResponsesModal";
 
 const HrResponsesTable = () => {
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+
   const data = [
     {
       jobTitle: "Frontend Developer",
@@ -33,44 +36,57 @@ const HrResponsesTable = () => {
   };
 
   return (
-    <div className="overflow-x-auto mx-4 my-6">
-      <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-        <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
-          <tr>
-            <th className="py-3 px-6 text-left">Job Title</th>
-            <th className="py-3 px-6 text-left">Candidate Name</th>
-            <th className="py-3 px-6 text-left">Email</th>
-            <th className="py-3 px-6 text-left">Score</th>
-            <th className="py-3 px-6 text-left">Date</th>
-            <th className="py-3 px-6 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-800 text-sm">
-          {data.map((item, index) => (
-            <tr key={index} className="hover:bg-gray-50 transition">
-              <td className="py-3 px-6">{item.jobTitle}</td>
-              <td className="py-3 px-6">{item.name}</td>
-              <td className="py-3 px-6">{item.email}</td>
-              <td className="py-3 px-6">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${getScoreStyles(
-                    item.score
-                  )}`}
-                >
-                  {item.score}/100
-                </span>
-              </td>
-              <td className="py-3 px-6">{item.date}</td>
-              <td className="py-3 px-6">
-                <div className="inline-block rounded-full hover:bg-blue-100 p-2 cursor-pointer transition">
-                  <MdOutlineRemoveRedEye size={20} className="text-gray-700" />
-                </div>
-              </td>
+    <>
+      <div className="overflow-x-auto mx-4 my-6">
+        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
+            <tr>
+              <th className="py-3 px-6 text-left">Job Title</th>
+              <th className="py-3 px-6 text-left">Candidate Name</th>
+              <th className="py-3 px-6 text-left">Email</th>
+              <th className="py-3 px-6 text-left">Score</th>
+              <th className="py-3 px-6 text-left">Date</th>
+              <th className="py-3 px-6 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="text-gray-800 text-sm">
+            {data.map((item, index) => (
+              <tr key={index} className="hover:bg-gray-50 transition">
+                <td className="py-3 px-6">{item.jobTitle}</td>
+                <td className="py-3 px-6">{item.name}</td>
+                <td className="py-3 px-6">{item.email}</td>
+                <td className="py-3 px-6">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${getScoreStyles(
+                      item.score
+                    )}`}
+                  >
+                    {item.score}/100
+                  </span>
+                </td>
+                <td className="py-3 px-6">{item.date}</td>
+                <td className="py-3 px-6">
+                  <button
+                    onClick={() => setSelectedCandidate(item)}
+                    className="inline-block rounded-full hover:bg-blue-100 p-2 cursor-pointer transition"
+                  >
+                    <MdOutlineRemoveRedEye
+                      size={20}
+                      className="text-gray-700"
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <HrResponsesModal
+        candidate={selectedCandidate}
+        onClose={() => setSelectedCandidate(null)}
+      />
+    </>
   );
 };
 
