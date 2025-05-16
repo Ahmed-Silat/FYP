@@ -1,7 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
+import InterviewModal from "./InterviewModal"; // Make sure to import your InterviewModal component
 
 const CandidateDashboardSlider = ({ isOpen, onClose }) => {
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const [jobDetails] = useState({
+    title: "Data Visualization Developer",
+    questions: [
+      "Tell us about your experience with data visualization libraries.",
+      "How would you optimize a dashboard rendering large datasets?",
+      "Describe a challenging data visualization problem you solved.",
+    ],
+  });
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -18,7 +29,16 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Don't return null when !isOpen - we need to keep the component mounted for the animation
+  const handleApplyNow = () => {
+    setShowInterviewModal(true);
+    onClose(); // Close the slider when opening the interview modal
+  };
+
+  const handleInterviewComplete = () => {
+    setShowInterviewModal(false);
+    // You might want to show a toast notification here
+  };
+
   return (
     <>
       {/* Overlay with conditional rendering and transition */}
@@ -37,7 +57,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold text-gray-800">
-            Data Visualization Developer
+            {jobDetails.title}
           </h2>
           <button
             onClick={onClose}
@@ -76,12 +96,25 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
           </div>
 
           <div className="pt-4">
-            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              onClick={handleApplyNow}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Apply Now
             </button>
           </div>
         </div>
       </div>
+
+      {/* Interview Modal */}
+      {showInterviewModal && (
+        <InterviewModal
+          jobTitle={jobDetails.title}
+          questions={jobDetails.questions}
+          onComplete={handleInterviewComplete}
+          onClose={() => setShowInterviewModal(false)}
+        />
+      )}
     </>
   );
 };
