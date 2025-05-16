@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../../contexts/authContext/index";
 import { doSignInWithEmailAndPassword } from "../../firebase/auth";
@@ -13,12 +13,23 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  const onSubmit = async (e) => {
+  const navigate = useNavigate();
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!isSigningIn) {
       setIsSigningIn(true);
       try {
         await doSignInWithEmailAndPassword(email, password);
+        navigate("/");
         setIsSigningIn(false);
       } catch (error) {
         setError("Invalid email or password.");
@@ -46,7 +57,7 @@ const Login = () => {
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             Welcome Back 👋
           </h2>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             <div>
               <label className="text-sm font-medium text-gray-600">Email</label>
               <input
@@ -54,6 +65,8 @@ const Login = () => {
                 className="w-full mt-1 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="you@example.com"
                 required
+                onChange={handleEmailChange}
+                value={email}
               />
             </div>
             <div>
@@ -66,6 +79,8 @@ const Login = () => {
                   className="w-full mt-1 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
                   placeholder="••••••••"
                   required
+                  onChange={handlePasswordChange}
+                  value={password}
                 />
                 <div
                   onClick={() => setShowPassword(!showPassword)}

@@ -1,13 +1,23 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import { doSignOut } from "../firebase/auth";
 
-const Sidebar = ({ links = [], onLogout }) => {
+const Sidebar = ({ links = [] }) => {
   const linkClasses = ({ isActive }) =>
     `flex items-center gap-4 p-2 rounded-lg transition-all cursor-pointer ${
       isActive ? "bg-gray-700" : "hover:bg-gray-700"
     }`;
 
+  const handleLogout = async () => {
+    try {
+      await doSignOut(); // Call Firebase logout
+      navigate("/login"); // Redirect to login page after logout
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Optionally show error to user
+    }
+  };
   return (
     <div className="flex flex-col justify-between items-center bg-gray-900 text-white h-screen w-20 md:w-60 p-4 shadow-lg">
       {/* Top section with menu items */}
@@ -23,7 +33,7 @@ const Sidebar = ({ links = [], onLogout }) => {
       {/* Bottom logout button */}
       <div className="w-full">
         <div
-          onClick={onLogout}
+          onClick={handleLogout}
           className="flex items-center gap-4 p-2 rounded-lg hover:bg-red-600 cursor-pointer transition-all"
         >
           <IoIosLogOut size={24} />
