@@ -123,8 +123,6 @@ function App() {
           </Route>
         </Routes>
       </Router> */}
-
-      {/* <HrJobCards /> */}
     </>
   );
 }
