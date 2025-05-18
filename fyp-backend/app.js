@@ -1,4 +1,5 @@
-const express = require('express');
+// const express = require('express');
+import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -7,18 +8,24 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Basic route
-// app.get('/', (req, res) => {
-//   res.send('Hello World!');
-// });
+import userRoutes from './routes/user.route.js';
+app.use('/api/users', userRoutes);
+
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-const db = require('./models/db');
+// const db = require('./models/db');
+import db from './models/db.js'; // Adjust the path as necessary
 
 // Test connection
 db.authenticate()
   .then(() => console.log('Database connected...'))
   .catch(err => console.log('Error: ' + err));
+
+  // After db.authenticate()
+db.sync({ force: true }) // Drops all tables and recreates them
+  .then(() => console.log('Database synced'))
+  .catch(err => console.error('Sync failed:', err));
