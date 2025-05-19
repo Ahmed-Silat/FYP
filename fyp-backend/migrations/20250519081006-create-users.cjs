@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Users", {
+    await queryInterface.createTable("users", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
       firebase_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       full_name: {
@@ -23,12 +23,12 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       company_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Companies",
+          model: "companies",
           key: "id",
         },
       },
@@ -44,6 +44,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
-  }
+    await queryInterface.dropTable("users");
+  },
 };

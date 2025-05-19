@@ -1,6 +1,6 @@
 // models/Company.js
 import { DataTypes } from "sequelize";
-import db from "../../models/db.js";
+import db from "../db.js";
 
 const Company = db.define("Company", {
   id: {
