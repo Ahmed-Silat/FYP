@@ -40,4 +40,13 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// Associations
+// Company.hasMany(User, {
+//   foreignKey: "company_id",
+// });
+
+// User.belongsTo(Company, {
+//   foreignKey: "company_id",
+// });
+
 module.exports = db;
