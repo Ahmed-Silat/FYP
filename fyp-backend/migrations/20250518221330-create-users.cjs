@@ -1,40 +1,49 @@
 'use strict';
 
-export const user = {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable("Users", {
       id: {
         type: Sequelize.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
-        autoIncrement: true
       },
-      name: {
+      firebase_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      full_name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
       },
-      password: {
+      role: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+      },
+      company_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Companies",
+          key: "id",
+        },
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW
-      }
+      },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable("Users");
   }
 };
