@@ -1,37 +1,43 @@
-import User from '../../models/UserAuth/user.js';
-import db from '../../models/db.js';
+import User from "../../models/UserAuth/User.js";
+import db from "../../models/db.js";
 
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { firebase_id, full_name, email, role, company_id } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'All fields are required' });
+    if (!firebase_id || !full_name || !email || !company_id) {
+      return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Test if User model is properly connected
-    console.log(User === db.models.User); // Should be true
-
-    const newUser = await User.create({ name, email, password });
+    const newUser = await User.create({
+      firebase_id,
+      full_name,
+      email,
+      role,
+      company_id,
+    });
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: "User created successfully",
       user: {
         id: newUser.id,
-        name: newUser.name,
-        email: newUser.email
-      }
+        firebase_id: newUser.firebase_id,
+        full_name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        company_id: newUser.company_id,
+      },
     });
   } catch (error) {
-    console.error('Detailed error:', error);
+    console.error("Detailed error:", error);
 
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'Email already exists' });
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({ error: "Email already exists" });
     }
 
     res.status(500).json({
-      error: 'Internal server error',
-      details: error.message
+      error: "Internal server error",
+      details: error.message,
     });
   }
 };

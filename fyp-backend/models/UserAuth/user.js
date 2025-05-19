@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import db from "../../models/db.js";
+import db from "../db.js";
 
 const User = db.define(
   "User",
@@ -10,7 +10,7 @@ const User = db.define(
       autoIncrement: true,
     },
     firebase_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     full_name: {
@@ -24,7 +24,7 @@ const User = db.define(
     },
     role: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
      company_id: {
       type: DataTypes.INTEGER,
@@ -37,7 +37,7 @@ const User = db.define(
   },
 },
   {
-    // timestamps: true, // This enables createdAt and updatedAt
+    timestamps: true, // This enables createdAt and updatedAt
     tableName: "users", // Explicitly set table name
   }
 );
