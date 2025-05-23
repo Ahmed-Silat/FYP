@@ -5,7 +5,7 @@ export const createUser = async (req, res) => {
   try {
     const { firebase_id, full_name, email, role, company_id } = req.body;
 
-    if (!firebase_id || !full_name || !email || !company_id) {
+    if (!firebase_id || !full_name || !email || !role ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
