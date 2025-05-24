@@ -12,6 +12,18 @@ import userRoutes from "./routes/user.route.js";
 import companyRoutes from "./routes/company.route.js";
 app.use("/user", userRoutes);
 app.use("/company", companyRoutes);
+// User route
+import userRoutes from './routes/user.route.js';
+app.use('/api/users', userRoutes);
+
+// Question route
+import questionRoutes from './routes/question.route.js';
+app.use('/api/questions', questionRoutes);
+
+// Job route
+import jobRoutes from './routes/job.route.js';
+app.use('/api/job', jobRoutes);
+
 
 // Start server
 app.listen(PORT, () => {
