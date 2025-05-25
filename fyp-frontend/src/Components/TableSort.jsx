@@ -10,10 +10,14 @@ const TableSort = ({ options = [], selectedValue, onChange, onToggleSort }) => {
         id="tableSort"
         value={selectedValue}
         onChange={onChange}
-        className="p-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="p-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option
+            key={opt.value}
+            value={opt.value}
+            className="cursor-pointer" // <-- doesn't affect all browsers but safe to include
+          >
             {opt.label}
           </option>
         ))}
@@ -21,7 +25,7 @@ const TableSort = ({ options = [], selectedValue, onChange, onToggleSort }) => {
 
       {/* Sort Button */}
       <button
-        className="p-2 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition"
+        className="p-2 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition cursor-pointer"
         title="Toggle Sort Order"
         onClick={onToggleSort}
       >

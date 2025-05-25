@@ -11,6 +11,11 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
   const emailInputRef = useRef(null);
   const companyInputRef = useRef(null);
 
+  // Autofocus on first input
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
+
   // Close modal on ESC key
   useEffect(() => {
     const handleKeyDown = (e) => e.key === "Escape" && onClose();
@@ -55,10 +60,10 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
   const focusInput = (ref) => ref.current?.focus();
 
   return (
-    <div className="fixed inset-0 bg-black opacity-80 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
       <div
         ref={modalRef}
-        className="bg-white rounded-xl shadow-lg w-full max-w-md"
+        className="bg-white rounded-xl shadow-lg w-full max-w-md max-h-screen overflow-y-auto"
       >
         <form onSubmit={handleSubmit}>
           {/* Header */}
@@ -72,7 +77,7 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition"
+              className="text-gray-400 hover:text-gray-600 transition cursor-pointer"
             >
               <IoClose size={24} />
             </button>
@@ -154,13 +159,13 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
             >
               Save Changes
             </button>

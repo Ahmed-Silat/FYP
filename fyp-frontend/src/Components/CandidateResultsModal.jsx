@@ -49,7 +49,7 @@ const CandidateResultsModal = ({ isOpen, onClose, selectedResult }) => {
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
               aria-label="Close modal"
             >
               <FaTimes className="text-xl" />
@@ -129,7 +129,7 @@ const CandidateResultsModal = ({ isOpen, onClose, selectedResult }) => {
           <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-xl">
             <button
               onClick={onClose}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
             >
               Close
             </button>

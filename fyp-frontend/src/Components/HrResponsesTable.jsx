@@ -49,7 +49,7 @@ const HrResponsesTable = () => {
               <th className="py-3 px-6 text-left">Actions</th>
             </tr>
           </thead>
-          <tbody className="text-gray-800 text-sm">
+          <tbody className="text-gray-800 text-sm cursor-pointer">
             {data.map((item, index) => (
               <tr key={index} className="hover:bg-gray-50 transition">
                 <td className="py-3 px-6">{item.jobTitle}</td>

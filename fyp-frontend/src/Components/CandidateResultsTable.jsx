@@ -68,7 +68,7 @@ const CandidateResultsTable = () => {
                 <th className="px-6 py-3 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 cursor-pointer">
               {data.map((job, idx) => (
                 <tr key={idx} className="hover:bg-gray-50 transition">
                   <td className="px-6 py-4 whitespace-nowrap">{job.title}</td>

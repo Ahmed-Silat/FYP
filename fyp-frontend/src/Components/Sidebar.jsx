@@ -6,7 +6,7 @@ import { doSignOut } from "../firebase/auth";
 const Sidebar = ({ links = [] }) => {
   const linkClasses = ({ isActive }) =>
     `flex items-center gap-4 p-2 rounded-lg transition-all cursor-pointer ${
-      isActive ? "bg-gray-700" : "hover:bg-gray-700"
+      isActive ? "bg-gray-700" : "hover:bg-blue-700"
     }`;
 
   const handleLogout = async () => {

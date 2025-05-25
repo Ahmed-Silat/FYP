@@ -40,10 +40,10 @@ function App() {
   }
   return (
     <>
-      <Router>
-        <Routes>
+      {/* <Router>
+        <Routes> */}
           {/* Public routes */}
-          <Route
+          {/* <Route
             path="/login"
             element={
               user ? <Navigate to="/candidate/dashboard" replace /> : <Login />
@@ -54,10 +54,10 @@ function App() {
             element={
               user ? <Navigate to="/candidate/dashboard" replace /> : <Signup />
             }
-          />
+          /> */}
 
           {/* Default route */}
-          <Route
+          {/* <Route
             path="/"
             element={
               user ? (
@@ -66,10 +66,10 @@ function App() {
                 <Navigate to="/login" replace />
               )
             }
-          />
+          /> */}
 
           {/* Protected candidate routes */}
-          <Route
+          {/* <Route
             path="/candidate"
             element={
               user ? <CandidateLayout /> : <Navigate to="/login" replace />
@@ -79,17 +79,17 @@ function App() {
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="results" element={<Results />} />
-          </Route>
+          </Route> */}
 
           {/* Catch-all route */}
-          <Route
+          {/* <Route
             path="*"
             element={
               <Navigate to={user ? "/candidate/dashboard" : "/login"} replace />
             }
           />
         </Routes>
-      </Router>
+      </Router> */}
       {/* <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -101,7 +101,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
         </Routes>
       </Router> */}
-      {/* <Router>
+      <Router>
         <Routes>
           <Route path="/candidate" element={<CandidateLayout />}>
             <Route path="dashboard" element={<CandidateDashboard />} />
@@ -122,7 +122,7 @@ function App() {
             <Route path="hr-management" element={<HRManagement />} />
           </Route>
         </Routes>
-      </Router> */}
+      </Router>
     </>
   );
 }

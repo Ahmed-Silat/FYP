@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MdClose, MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 
 const HrResponsesModal = ({ candidate, onClose }) => {
   const modalRef = useRef(null);
   const [selectedStatus, setSelectedStatus] = useState("In Review");
 
-  // Handle click outside modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -13,7 +12,6 @@ const HrResponsesModal = ({ candidate, onClose }) => {
       }
     };
 
-    // Handle ESC key press
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         onClose();
@@ -50,18 +48,17 @@ const HrResponsesModal = ({ candidate, onClose }) => {
 
   const handleStatusChange = (status) => {
     setSelectedStatus(status);
-    // Here you would typically update the status in your backend
     console.log("Status changed to:", status);
   };
 
   return (
-    <div className="fixed inset-0 bg-black opacity-80 flex items-center justify-center p-4 z-[1000]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div
         ref={modalRef}
-        className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto z-[1001]"
+        className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative"
       >
-        {/* Modal Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start z-10">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
               {candidate.name}'s Application
@@ -72,16 +69,16 @@ const HrResponsesModal = ({ candidate, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition p-1"
+            className="text-gray-400 hover:text-gray-600 transition p-1 cursor-pointer"
             aria-label="Close modal"
           >
             <MdClose size={24} />
           </button>
         </div>
 
-        {/* Modal Content */}
+        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Candidate Information */}
+          {/* Candidate Info */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Candidate Information
@@ -98,41 +95,32 @@ const HrResponsesModal = ({ candidate, onClose }) => {
             </div>
           </div>
 
-          {/* Overall Score */}
+          {/* Score */}
           <div className="bg-gray-50 p-6 rounded-lg text-center">
             <h3 className="text-sm font-medium text-gray-500">Overall Score</h3>
-            <p
-              className={`mt-2 text-4xl font-bold ${getScoreColor(
-                candidate.score
-              )}`}
-            >
+            <p className={`mt-2 text-4xl font-bold ${getScoreColor(candidate.score)}`}>
               {candidate.score}/100
             </p>
             <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className={`h-full ${getScoreColor(candidate.score).replace(
-                  "text",
-                  "bg"
-                )}`}
+                className={`${getScoreColor(candidate.score).replace("text", "bg")} h-full`}
                 style={{ width: `${candidate.score}%` }}
               ></div>
             </div>
           </div>
 
-          {/* Application Status */}
+          {/* Status */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Application Status
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Status</h3>
             <div className="flex flex-wrap gap-3">
               {["In Review", "Shortlist", "Reject"].map((status) => (
                 <button
                   key={status}
                   onClick={() => handleStatusChange(status)}
-                  className={`px-4 py-2 rounded-lg font-medium transition ${getStatusColor(
+                  className={`px-4 py-2 rounded-lg font-medium transition cursor-pointer ${getStatusColor(
                     status
                   )} ${
-                    status === selectedStatus
+                    selectedStatus === status
                       ? "ring-2 ring-offset-2 ring-gray-400"
                       : ""
                   }`}
@@ -144,11 +132,11 @@ const HrResponsesModal = ({ candidate, onClose }) => {
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-3">
+        {/* Footer */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition font-medium"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
             Close
           </button>
@@ -159,5 +147,3 @@ const HrResponsesModal = ({ candidate, onClose }) => {
 };
 
 export default HrResponsesModal;
-
-// the above modal is working fine but the issue is that it showing the background on the modal fix that issue

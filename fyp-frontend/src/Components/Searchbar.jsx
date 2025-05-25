@@ -16,7 +16,7 @@ const Searchbar = ({ placeholder }) => {
         placeholder={placeholder || "Search..."}
         value={searchTerm}
         onChange={handleSearch}
-        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700"
+        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 cursor-pointer"
       />
     </div>
   );

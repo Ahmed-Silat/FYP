@@ -11,9 +11,8 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
   const timerRef = useRef(null);
-  const isStoppingRef = useRef(false); // Track if we're already stopping
+  const isStoppingRef = useRef(false);
 
-  // Handle cleanup
   useEffect(() => {
     return () => {
       stopMedia();
@@ -54,11 +53,9 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
     try {
       setRecordingStatus("requesting");
       setError(null);
-      isStoppingRef.current = false; // Reset stopping flag
+      isStoppingRef.current = false;
 
-      if (!videoRef.current) {
-        throw new Error("Video element not available");
-      }
+      if (!videoRef.current) throw new Error("Video element not available");
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -101,8 +98,8 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
   };
 
   const stopRecording = () => {
-    if (isStoppingRef.current) return; // If already stopping, do nothing
-    isStoppingRef.current = true; // Mark that we're stopping
+    if (isStoppingRef.current) return;
+    isStoppingRef.current = true;
 
     clearTimer();
     stopMedia();
@@ -111,13 +108,13 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Error</h2>
           <p className="text-gray-600">No interview questions available.</p>
           <button
             onClick={onClose}
-            className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg cursor-pointer"
           >
             Close
           </button>
@@ -129,7 +126,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="fixed inset-0 bg-black opacity-75 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative">
         {/* Header */}
         <div className="sticky top-0 bg-white p-6 border-b border-gray-200 flex justify-between items-center">
@@ -143,7 +140,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 cursor-pointer"
             disabled={recordingStatus === "recording"}
           >
             <FaTimes className="w-6 h-6" />
@@ -194,7 +191,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
                 {recordingStatus === "ready" ? (
                   <button
                     onClick={startRecording}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full text-lg flex items-center transition-all"
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full text-lg flex items-center transition-all cursor-pointer"
                   >
                     <span className="mr-2">●</span> Start Recording
                   </button>
@@ -205,7 +202,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
                     </p>
                     <button
                       onClick={stopRecording}
-                      className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-full"
+                      className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-full cursor-pointer"
                     >
                       Stop Recording
                     </button>
