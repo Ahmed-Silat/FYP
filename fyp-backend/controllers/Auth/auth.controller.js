@@ -151,7 +151,7 @@ export const getUserByRole = async (req, res) => {
       where: {
         role: role,
       },
-      include: { model: Company },
+      include: { model: Company, required: true },
     });
 
     if (!users) {
@@ -165,7 +165,7 @@ export const getUserByRole = async (req, res) => {
         full_name: user.full_name,
         email: user.email,
         role: user.role,
-        company_id: user.company_id,
+        company: user.Company,
       })),
     });
   } catch (error) {
