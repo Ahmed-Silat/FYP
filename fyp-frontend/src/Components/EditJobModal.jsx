@@ -159,7 +159,7 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
                 aria-label="Close modal"
               >
                 <FaTimes className="text-xl" />
@@ -305,7 +305,7 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-xl">
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer"
               >
                 Save Changes
               </button>

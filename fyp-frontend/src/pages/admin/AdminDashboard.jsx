@@ -14,7 +14,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 cursor-pointer">
         <InfoCard title="Total Candidates" value="126" icon={FaUsers} />
         <InfoCard title="Active Jobs" value="43" icon={FaBriefcase} />
         <InfoCard title="New Applications" value="89" icon={FaFileAlt} />

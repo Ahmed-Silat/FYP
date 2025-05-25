@@ -16,7 +16,7 @@ const SortBy = () => {
     <div className="relative inline-block text-left">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center justify-between px-4 py-2 text-sm font-medium text-black bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50"
+        className="inline-flex items-center px-4 py-2 text-sm font-medium text-black bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer"
       >
         <BiSortAlt2 className="mr-2 text-lg" />
         <span>Sort by: {selected}</span>
@@ -28,7 +28,7 @@ const SortBy = () => {
             <button
               key={option}
               onClick={() => handleSelect(option)}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
             >
               {option}
             </button>

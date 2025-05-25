@@ -86,7 +86,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
                 (skill, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-200 text-gray-700 font-semibold text-xs px-3 py-1 rounded-full"
+                    className="bg-gray-200 text-gray-700 font-semibold text-xs px-3 py-1 rounded-full cursor-pointer"
                   >
                     {skill}
                   </span>
@@ -98,7 +98,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
           <div className="pt-4">
             <button
               onClick={handleApplyNow}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
             >
               Apply Now
             </button>
