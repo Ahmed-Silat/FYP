@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import db from "../db.js";
+import Company from "../company/Company.js";
 
 const User = db.define(
   "User",
@@ -26,7 +27,7 @@ const User = db.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-     company_id: {
+    company_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "companies", // Must match your Company table name
@@ -34,8 +35,8 @@ const User = db.define(
       },
       onUpdate: "CASCADE",
       onDelete: "SET NULL", // Or "CASCADE", "RESTRICT", etc.
+    },
   },
-},
   {
     timestamps: true, // This enables createdAt and updatedAt
     tableName: "users", // Explicitly set table name

@@ -17,6 +17,6 @@ router.post("/create", createUser);
 router.put("/update/:id", updateUser);
 router.delete("/delete/:id", deleteUser);
 router.get("/getUserById/:id", getUserById);
-router.get("/getUserByRole/:role", getUserByRole);
+router.get("/getUserByRole", getUserByRole);
 
 export default router;

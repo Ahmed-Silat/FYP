@@ -1,5 +1,5 @@
 import User from "../../models/UserAuth/User.js";
-import db from "../../models/db.js";
+import Company from "../../models/company/Company.js";
 
 export const createUser = async (req, res) => {
   try {
@@ -145,12 +145,13 @@ export const getUserById = async (req, res) => {
 
 export const getUserByRole = async (req, res) => {
   try {
-    const { role } = req.params;
+    const { role } = req.query;
 
     const users = await User.findAll({
       where: {
         role: role,
       },
+      include: { model: Company },
     });
 
     if (!users) {
