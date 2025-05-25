@@ -42,8 +42,8 @@ function App() {
     <>
       {/* <Router>
         <Routes> */}
-          {/* Public routes */}
-          {/* <Route
+      {/* Public routes */}
+      {/* <Route
             path="/login"
             element={
               user ? <Navigate to="/candidate/dashboard" replace /> : <Login />
@@ -56,8 +56,8 @@ function App() {
             }
           /> */}
 
-          {/* Default route */}
-          {/* <Route
+      {/* Default route */}
+      {/* <Route
             path="/"
             element={
               user ? (
@@ -68,8 +68,8 @@ function App() {
             }
           /> */}
 
-          {/* Protected candidate routes */}
-          {/* <Route
+      {/* Protected candidate routes */}
+      {/* <Route
             path="/candidate"
             element={
               user ? <CandidateLayout /> : <Navigate to="/login" replace />
@@ -81,8 +81,8 @@ function App() {
             <Route path="results" element={<Results />} />
           </Route> */}
 
-          {/* Catch-all route */}
-          {/* <Route
+      {/* Catch-all route */}
+      {/* <Route
             path="*"
             element={
               <Navigate to={user ? "/candidate/dashboard" : "/login"} replace />
