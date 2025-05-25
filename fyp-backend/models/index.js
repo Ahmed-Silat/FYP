@@ -5,7 +5,8 @@ import path from "path";
 import Sequelize from "sequelize";
 import process from "process";
 import Company from "./company/Company.js";
-import User from "./UserAuth/user.js";
+import User from "./UserAuth/User.js";
+
 // import configFile from "../config/config.json";
 
 const env = process.env.NODE_ENV || "development";
