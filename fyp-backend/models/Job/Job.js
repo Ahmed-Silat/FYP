@@ -1,6 +1,6 @@
-// models/Company.js
+// models/Job.js
 import { DataTypes } from "sequelize";
-import db from "../db.js";
+import db from "../../db.js";
 
 const Job = db.define(
   "Job",
@@ -19,17 +19,8 @@ const Job = db.define(
       allowNull: false,
     },
     skills: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.ARRAY(DataTypes.STRING), // If using PostgreSQL
       allowNull: false,
-    },
-    question_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "questions",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL", // Or "CASCADE", "RESTRICT", etc.
     },
     user_id: {
       type: DataTypes.INTEGER,
@@ -38,11 +29,12 @@ const Job = db.define(
         key: "id",
       },
       onUpdate: "CASCADE",
-      onDelete: "SET NULL", // Or "CASCADE", "RESTRICT", etc.
+      onDelete: "SET NULL",
     },
   },
   {
     tableName: "jobs",
+    timestamps: true, // Enables createdAt and updatedAt
   }
 );
 

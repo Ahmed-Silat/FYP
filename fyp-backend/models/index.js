@@ -7,6 +7,9 @@ import process from "process";
 import Company from "./company/Company.js";
 import User from "./UserAuth/User.js";
 
+import Job from "./Job/Job.js";
+import Question from "./Questions/Question.js";
+
 // import configFile from "../config/config.json";
 
 const env = process.env.NODE_ENV || "development";
@@ -65,3 +68,18 @@ User.belongsTo(Company, {
   onUpdate: "CASCADE",
   onDelete: "SET NULL",
 });
+
+Job.hasMany(Question, {
+  foreignKey: "job_id",
+  as: "questions",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+Question.belongsTo(Job, {
+  foreignKey: "job_id",
+  as: "job",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
