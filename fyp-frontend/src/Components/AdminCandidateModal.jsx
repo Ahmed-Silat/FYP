@@ -55,7 +55,7 @@ const AdminCandidateModal = ({ candidate, onClose }) => {
           <div className="p-6">
             <div className="mb-6">
               <div className="bg-blue-50 p-4 rounded-lg inline-block">
-                <div className="flex items-center space-x-2 cursor-pointer">
+                <div className="flex items-center space-x-2">
                   <h3 className="text-lg font-semibold text-blue-800">
                     Applied Jobs
                   </h3>

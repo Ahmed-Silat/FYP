@@ -57,7 +57,7 @@ const CandidateJobApplicationsTable = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 cursor-pointer">
+        <tbody className="bg-white divide-y divide-gray-200">
           {applications.map((application) => (
             <tr key={application.id} className="hover:bg-gray-50">
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
