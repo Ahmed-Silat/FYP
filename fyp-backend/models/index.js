@@ -9,6 +9,8 @@ import User from "./UserAuth/User.js";
 
 import Job from "./Job/Job.js";
 import Question from "./Questions/Question.js";
+import Video from "./Videos/Video.js";
+import CandidateApplication from "./CandidateApplication/CandidateApplication.js";
 
 // import configFile from "../config/config.json";
 
@@ -83,3 +85,54 @@ Question.belongsTo(Job, {
   onDelete: "CASCADE",
 });
 
+User.hasMany(Video, {
+  foreignKey: "user_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+Video.belongsTo(User, {
+  foreignKey: "user_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+Question.hasMany(Video, {
+  foreignKey: "question_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+Video.belongsTo(Question, {
+  foreignKey: "question_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+// Each CandidateApplication belongs to one User
+CandidateApplication.belongsTo(User, {
+  foreignKey: "user_id",
+  onDelete: "SET NULL",
+  onUpdate: "CASCADE",
+});
+
+// One User can have many CandidateApplications
+User.hasMany(CandidateApplication, {
+  foreignKey: "user_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+// Each CandidateApplication belongs to one Job
+CandidateApplication.belongsTo(Job, {
+  foreignKey: "job_id",
+  onDelete: "SET NULL",
+  onUpdate: "CASCADE",
+});
+
+// One Job can have many CandidateApplications
+Job.hasMany(CandidateApplication, {
+  foreignKey: "job_id",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
