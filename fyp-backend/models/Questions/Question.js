@@ -1,31 +1,33 @@
-// models/Company.js
+// models/Question.js
 import { DataTypes } from "sequelize";
-import db from "../db.js";
+import db from "../../db.js";
 
-const Questions = db.define(
-  "Questions",
+const Question = db.define(
+  "Question",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    question_01: {
+    question: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    question_02: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    question_03: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    job_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "jobs",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
   },
   {
     tableName: "questions",
+    timestamps: true, // Enables createdAt and updatedAt
   }
 );
 
-export default Questions;
+export default Question;

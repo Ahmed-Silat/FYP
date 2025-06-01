@@ -1,7 +1,7 @@
 // const express = require('express');
 import express from "express";
 import "./models/index.js"; // Import models to ensure they are registered
-import db from "./models/db.js";
+import db from "./db.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,13 +17,9 @@ app.use("/user", userRoutes);
 import companyRoutes from "./routes/company.route.js";
 app.use("/company", companyRoutes);
 
-// Question route
-import questionRoutes from "./routes/question.route.js";
-app.use("/api/questions", questionRoutes);
-
 // Job route
 import jobRoutes from "./routes/job.route.js";
-app.use("/api/job", jobRoutes);
+app.use("/job", jobRoutes);
 
 // Start server
 app.listen(PORT, () => {
