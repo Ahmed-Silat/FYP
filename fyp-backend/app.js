@@ -21,6 +21,14 @@ app.use("/company", companyRoutes);
 import jobRoutes from "./routes/job.route.js";
 app.use("/job", jobRoutes);
 
+// Video route
+import videoRoutes from "./routes/video.route.js";
+app.use("/videos", videoRoutes);
+
+// Candidate Application route
+import candidateApplicationRoutes from "./routes/candidateApplication.route.js";
+app.use("/applications", candidateApplicationRoutes);
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
