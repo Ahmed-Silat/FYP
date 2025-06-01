@@ -60,7 +60,7 @@ const HrJobCards = ({ onEditJob }) => {
         {jobData.map((job, idx) => (
           <div
             key={idx}
-            className="w-full md:w-[40%] group bg-white rounded-2xl border border-gray-100 p-6 shadow-md hover:shadow-2xl hover:-translate-y-[2px] transition-all duration-500 ease-in-out cursor-pointer"
+            className="w-full md:w-[40%] group bg-white rounded-2xl border border-gray-100 p-6 shadow-md hover:shadow-2xl hover:-translate-y-[2px] transition-all duration-500 ease-in-out"
           >
             {/* Header */}
             <div className="flex items-start justify-between mb-4">

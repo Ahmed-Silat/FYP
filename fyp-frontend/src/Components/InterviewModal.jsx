@@ -178,8 +178,9 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
                   autoPlay
                   playsInline
                   muted
-                  className="w-full h-96 object-cover"
+                  className="w-full h-96 object-cover transform scale-x-[-1]"
                 />
+
                 {recordingStatus === "recording" && (
                   <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
                     ⏱️ {timeLeft}s remaining

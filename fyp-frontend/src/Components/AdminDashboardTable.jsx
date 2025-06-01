@@ -24,7 +24,7 @@ const AdminDashboardTable = () => {
             <th className="p-3">Applicants</th>
           </tr>
         </thead>
-        <tbody className="text-gray-800 text-sm text-center cursor-pointer">
+        <tbody className="text-gray-800 text-sm text-center">
           {data.map((item, index) => (
             <tr key={index} className="hover:bg-gray-50 transition">
               <td className="py-3 px-6">{item.jobTitle}</td>

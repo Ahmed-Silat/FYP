@@ -86,7 +86,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
                 (skill, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-200 text-gray-700 font-semibold text-xs px-3 py-1 rounded-full cursor-pointer"
+                    className="bg-gray-200 text-gray-700 font-semibold text-xs px-3 py-1 rounded-full"
                   >
                     {skill}
                   </span>
