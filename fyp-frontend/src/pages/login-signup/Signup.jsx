@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../../contexts/authContext";
 import { doSignUpWithEmailAndPassword } from "../../firebase/auth";
+import { signup } from "../../service/AuthService";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -37,13 +38,26 @@ const Signup = () => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
-    } else {
-      if (!isSigningUp) {
-        setIsSigningUp(true);
-        await doSignUpWithEmailAndPassword(email, password);
+      return;
+    }
+
+    if (!isSigningUp) {
+      setIsSigningUp(true);
+      try {
+        const firebaseUser = await doSignUpWithEmailAndPassword(
+          email,
+          password
+        );
+        const firebase_id = firebaseUser.user.uid;
+
+        await signup(firebase_id, name, email, "candidate", null); // set default role
+
         navigate("/");
-        // Add your signup logic here
+      } catch (err) {
+        console.error(err);
+        setError("Signup failed");
       }
+      setIsSigningUp(false);
     }
   };
 

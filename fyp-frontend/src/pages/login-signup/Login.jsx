@@ -28,11 +28,25 @@ const Login = () => {
     if (!isSigningIn) {
       setIsSigningIn(true);
       try {
-        await doSignInWithEmailAndPassword(email, password);
-        navigate("/");
-        setIsSigningIn(false);
+        const userCred = await doSignInWithEmailAndPassword(email, password);
+        const firebaseId = userCred.user.uid;
+
+        const userData = await login(firebaseId); // Fetch role etc.
+        localStorage.setItem("userData", JSON.stringify(userData)); // Store role
+
+        // Redirect based on role
+        if (userData.role === "candidate") {
+          navigate("/candidate/dashboard");
+        } else if (userData.role === "hr") {
+          navigate("/hr/dashboard");
+        } else if (userData.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       } catch (error) {
         setError("Invalid email or password.");
+      } finally {
         setIsSigningIn(false);
       }
     }
