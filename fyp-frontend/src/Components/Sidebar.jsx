@@ -1,9 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
 import { doSignOut } from "../firebase/auth";
 
 const Sidebar = ({ links = [] }) => {
+  const navigate = useNavigate();
+
   const linkClasses = ({ isActive }) =>
     `flex items-center gap-4 p-2 rounded-lg transition-all cursor-pointer ${
       isActive ? "bg-gray-700" : "hover:bg-blue-700"
