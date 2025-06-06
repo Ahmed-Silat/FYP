@@ -4,10 +4,14 @@ import "./models/index.js"; // Import models to ensure they are registered
 import db from "./db.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
+import cors from "cors";
 
 // Middleware
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+// Cors
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
 // User route
 import userRoutes from "./routes/user.route.js";

@@ -5,6 +5,7 @@ import express from "express";
 import {
   createUser,
   deleteUser,
+  getUserByFirebaseId,
   getUserById,
   getUserByRole,
   updateUser,
@@ -18,5 +19,6 @@ router.put("/update/:id", updateUser);
 router.delete("/delete/:id", deleteUser);
 router.get("/getUserById/:id", getUserById);
 router.get("/getUserByRole", getUserByRole);
+router.get("/getUserByFirebaseId/:firebase_id", getUserByFirebaseId);
 
 export default router;

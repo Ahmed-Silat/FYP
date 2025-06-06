@@ -176,3 +176,32 @@ export const getUserByRole = async (req, res) => {
     });
   }
 };
+
+export const getUserByFirebaseId = async (req, res) => {
+  try {
+    const { firebase_id } = req.params;
+
+    const user = await User.findOne({ where: { firebase_id } });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      user: {
+        id: user.id,
+        firebase_id: user.firebase_id,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role,
+        company_id: user.company_id,
+      },
+    });
+  } catch (error) {
+    console.error("Detailed error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+};
