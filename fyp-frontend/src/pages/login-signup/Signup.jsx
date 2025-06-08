@@ -3,11 +3,11 @@ import { Link, Navigate, useNavigate } from "react-router";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../../contexts/authContext";
 import { doSignUpWithEmailAndPassword } from "../../firebase/auth";
-import { signup } from "../../service/AuthService";
+import { login, signup } from "../../service/AuthService";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { userLoggedIn } = useAuth();
+  const { userLoggedIn, setUser, setUserData } = useAuth(); // Added context setters
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,20 +44,32 @@ const Signup = () => {
     if (!isSigningUp) {
       setIsSigningUp(true);
       try {
+        // 1. Create Firebase auth user
         const firebaseUser = await doSignUpWithEmailAndPassword(
           email,
           password
         );
-        const firebase_id = firebaseUser.user.uid;
+        const firebaseId = firebaseUser.user.uid;
 
-        await signup(firebase_id, name, email, "candidate", null); // set default role
+        // 2. Create user in your database (default role: candidate)
+        await signup(firebaseId, name, email, "candidate", null);
 
-        navigate("/");
+        // 3. Get complete user data
+        const userData = await login(firebaseId);
+
+        // 4. Store in localStorage and update context
+        localStorage.setItem("userData", JSON.stringify(userData));
+        setUser(firebaseUser.user);
+        setUserData(userData);
+
+        // 5. Redirect to candidate dashboard
+        navigate("/candidate/dashboard");
       } catch (err) {
-        console.error(err);
-        setError("Signup failed");
+        console.error("Signup error:", err);
+        setError(err.message || "Signup failed. Please try again.");
+      } finally {
+        setIsSigningUp(false);
       }
-      setIsSigningUp(false);
     }
   };
 
