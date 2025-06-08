@@ -3,15 +3,17 @@ import { Link, Navigate, useNavigate } from "react-router";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../../contexts/authContext/index";
 import { doSignInWithEmailAndPassword } from "../../firebase/auth";
+import { login } from "../../service/AuthService";
 
 const Login = () => {
-  const { userLoggedIn } = useAuth();
+  const { user, setUser, setUserData } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  // const [userData, setUserData] = useState();
 
   const navigate = useNavigate();
 
@@ -31,18 +33,20 @@ const Login = () => {
         const userCred = await doSignInWithEmailAndPassword(email, password);
         const firebaseId = userCred.user.uid;
 
-        const userData = await login(firebaseId); // Fetch role etc.
-        localStorage.setItem("userData", JSON.stringify(userData)); // Store role
+        const userData = await login(firebaseId);
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        // Update auth context immediately
+        setUser(userCred.user); // Set Firebase user
+        setUserData(userData); // Set role data
 
         // Redirect based on role
-        if (userData.role === "candidate") {
+        if (userData.user.role === "candidate") {
           navigate("/candidate/dashboard");
-        } else if (userData.role === "hr") {
+        } else if (userData.user.role === "hr") {
           navigate("/hr/dashboard");
-        } else if (userData.role === "admin") {
+        } else if (userData.user.role === "admin") {
           navigate("/admin/dashboard");
-        } else {
-          navigate("/");
         }
       } catch (error) {
         setError("Invalid email or password.");
@@ -65,7 +69,7 @@ const Login = () => {
 
   return (
     <>
-      {userLoggedIn && <Navigate to="/" replace={true} />}
+      {user && <Navigate to="/" replace={true} />}
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 px-4">
         <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">

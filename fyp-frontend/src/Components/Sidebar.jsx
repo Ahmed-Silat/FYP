@@ -15,11 +15,15 @@ const Sidebar = ({ links = [] }) => {
     try {
       await doSignOut(); // Call Firebase logout
       navigate("/login"); // Redirect to login page after logout
+      // localStorage.removeItem("userData");
+      // localStorage.removeItem("persist:root");
+      localStorage.clear();
     } catch (error) {
       console.error("Logout error:", error);
       // Optionally show error to user
     }
   };
+
   return (
     <div className="flex flex-col justify-between items-center bg-gray-900 text-white h-screen w-20 md:w-60 p-4 shadow-lg">
       {/* Top section with menu items */}
