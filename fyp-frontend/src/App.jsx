@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import HRManagement from "./pages/admin/HRManagement";
 import AdminLayout from "./Components/AdminLayout";
 import { useAuth } from "./contexts/authContext";
+import Companies from "./pages/admin/Companies";
 
 function App() {
   const { user, userData, loading } = useAuth();
@@ -115,6 +116,7 @@ function App() {
           <Route path="candidates" element={<Candidates />} />
           <Route path="hr-management" element={<HRManagement />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="companies" element={<Companies />} />
         </Route>
 
         {/* Catch-all Route */}

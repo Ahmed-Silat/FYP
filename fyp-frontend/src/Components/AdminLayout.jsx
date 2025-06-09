@@ -4,6 +4,7 @@ import { RxPerson } from "react-icons/rx";
 import { MdDashboard } from "react-icons/md";
 import { FaRegFileAlt } from "react-icons/fa";
 import { CiSettings } from "react-icons/ci";
+import { PiBuildingOffice } from "react-icons/pi";
 import { Outlet } from "react-router";
 
 const AdminLayout = () => {
@@ -22,6 +23,11 @@ const AdminLayout = () => {
       to: "/admin/candidates",
       label: "Candidates",
       icon: <FaRegFileAlt size={22} />,
+    },
+    {
+      to: "/admin/companies",
+      label: "Companies",
+      icon: <PiBuildingOffice size={24} />,
     },
     {
       to: "/admin/profile",
