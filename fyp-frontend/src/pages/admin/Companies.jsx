@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import AdminCompanyManagement from "../../Components/AdminCompanyManagement";
+import CreateCompanyModal from "../../Components/CreateCompanyModal";
 import { FaPlus } from "react-icons/fa";
 
 const Companies = () => {
   const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCreateCompany = (companyName) => {
+    console.log("New Company:", companyName);
+    // Add logic to update the company list or make an API call
+  };
 
   return (
     <div className="p-4 w-full space-y-6">
@@ -15,7 +22,10 @@ const Companies = () => {
             View, search, and add companies.
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-sm hover:cursor-pointer">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-sm hover:cursor-pointer"
+        >
           <FaPlus className="text-xs" />
           Add Company
         </button>
@@ -36,6 +46,14 @@ const Companies = () => {
       <div className="bg-white rounded-lg shadow p-4 overflow-x-auto">
         <AdminCompanyManagement search={search} />
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <CreateCompanyModal
+          onClose={() => setIsModalOpen(false)}
+          onCreate={handleCreateCompany}
+        />
+      )}
     </div>
   );
 };
