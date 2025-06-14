@@ -4,8 +4,15 @@ import { IoClose } from "react-icons/io5";
 const EditCompanyModal = ({ companyData, onClose, onSave }) => {
   const modalRef = useRef(null);
   const inputRef = useRef(null);
-  const [companyName, setCompanyName] = useState(companyData?.name || "");
+  const [companyName, setCompanyName] = useState(
+    companyData?.company_name || ""
+  );
   const [error, setError] = useState("");
+
+  // Update name when companyData changes
+  useEffect(() => {
+    setCompanyName(companyData?.company_name || "");
+  }, [companyData]);
 
   // Autofocus input on mount
   useEffect(() => {

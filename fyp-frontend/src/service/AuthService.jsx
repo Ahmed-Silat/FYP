@@ -27,3 +27,28 @@ export const signup = async (
   console.log("user signup successful");
   return data;
 };
+
+export const updateUser = async (
+  userId,
+  firebase_id,
+  full_name,
+  email,
+  company_id,
+  role
+) => {
+  const { data } = await axios.put(`${EXPRESS_API_URL}/user/update/${userId}`, {
+    firebase_id,
+    full_name,
+    email,
+    company_id,
+    role,
+  });
+  return data;
+};
+
+export const getUserByRole = async (role) => {
+  const { data } = await axios.get(`${EXPRESS_API_URL}/user/getUserByRole`, {
+    params: { role },
+  });
+  return data;
+};

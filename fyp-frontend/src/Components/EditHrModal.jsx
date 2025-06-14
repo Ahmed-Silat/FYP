@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
+import { getAllCompanies } from "../service/CompanyService";
+import { updateUser } from "../service/AuthService";
 
 const EditHrModal = ({ hrData, onClose, onSave }) => {
   const modalRef = useRef(null);
   const [formData, setFormData] = useState(hrData);
   const [errors, setErrors] = useState({});
+  const [companies, setCompanies] = useState([]);
 
   // Refs for input focus
   const nameInputRef = useRef(null);
@@ -34,27 +37,76 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await getAllCompanies();
+        // console.log("Fetched companies:", response);
+        setCompanies(response.companies || []);
+      } catch (error) {
+        console.error("Failed to fetch companies:", error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "company") {
+      const selectedCompany = companies.find((c) => c.company_name === value);
+      setFormData((prev) => ({
+        ...prev,
+        company: selectedCompany ? selectedCompany : prev.company,
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.full_name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.company.trim()) newErrors.company = "Company is required";
+    if (!formData.company || !formData.company.company_name?.trim()) {
+      newErrors.company = "Company is required";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    onSave(formData); // Pass updated data to parent
-    onClose();
+    try {
+      console.log(
+        formData.id,
+        formData.firebase_id,
+        formData.full_name,
+        formData.email,
+        formData.company.id
+      );
+
+      // Update user in DB
+      const response = await updateUser(
+        formData.id,
+        formData.firebase_id,
+        formData.full_name,
+        formData.email,
+        formData.company.id,
+        "hr"
+      );
+
+      onSave(response);
+      onClose();
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      alert("Failed to update user. Please try again.");
+    }
   };
 
   const focusInput = (ref) => ref.current?.focus();
@@ -95,8 +147,8 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
               <input
                 ref={nameInputRef}
                 type="text"
-                name="name"
-                value={formData.name}
+                name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
                 className={`w-full px-4 py-2 border ${
                   errors.name ? "border-red-500" : "border-gray-300"
@@ -125,6 +177,7 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
                   errors.email ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
                 placeholder="email@example.com"
+                disabled
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -138,16 +191,22 @@ const EditHrModal = ({ hrData, onClose, onSave }) => {
               >
                 Company Name
               </label>
-              <input
+              <select
                 ref={companyInputRef}
-                type="text"
                 name="company"
-                value={formData.company}
+                value={formData.company.company_name}
                 onChange={handleChange}
                 className={`w-full px-4 py-2 border ${
                   errors.company ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
-              />
+              >
+                <option value="">Select a company</option>
+                {companies.map((company) => (
+                  <option key={company.id} value={company.company_name}>
+                    {company.company_name}
+                  </option>
+                ))}
+              </select>
               {errors.company && (
                 <p className="mt-1 text-sm text-red-600">{errors.company}</p>
               )}

@@ -47,7 +47,7 @@ export const updateUser = async (req, res) => {
     const { id } = req.params;
     const { firebase_id, full_name, email, role, company_id } = req.body;
 
-    if (!firebase_id || !full_name || !email || !role) {
+    if (!firebase_id || !full_name || !email || !role || !company_id) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -57,6 +57,7 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Update fields
     user.firebase_id = firebase_id;
     user.full_name = full_name;
     user.email = email;
@@ -65,15 +66,20 @@ export const updateUser = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
+    // Fetch the user again with the associated company
+    const updatedUser = await User.findByPk(id, {
+      include: { model: Company, required: true },
+    });
+
+    return res.status(200).json({
       message: "User updated successfully",
       user: {
-        id: user.id,
-        firebase_id: user.firebase_id,
-        full_name: user.full_name,
-        email: user.email,
-        role: user.role,
-        company_id: user.company_id,
+        id: updatedUser.id,
+        firebase_id: updatedUser.firebase_id,
+        full_name: updatedUser.full_name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        company: updatedUser.Company, // Manual renaming to 'company'
       },
     });
   } catch (error) {
