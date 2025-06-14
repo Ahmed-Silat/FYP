@@ -1,5 +1,8 @@
-// src/firebase/auth.js
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "./firebase";
 
 export const doSignUpWithEmailAndPassword = (email, password) =>

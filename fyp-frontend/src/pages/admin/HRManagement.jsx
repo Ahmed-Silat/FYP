@@ -6,11 +6,21 @@ import CreateHrModal from "../../Components/CreateHrModal"; // Adjust path as ne
 
 const HRManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reloadHRs, setReloadHRs] = useState(false);
+
+  const handleHRCreated = () => {
+    setReloadHRs((prev) => !prev); // toggle to re-trigger useEffect in AdminHrManagement
+  };
 
   return (
     <div className="p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
       {/* Create HR Modal */}
-      {isModalOpen && <CreateHrModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <CreateHrModal
+          onClose={() => setIsModalOpen(false)}
+          onHRCreated={handleHRCreated} // ✅ Pass the callback
+        />
+      )}
 
       {/* Management Table Header */}
       <div className="mb-6">
@@ -36,7 +46,7 @@ const HRManagement = () => {
 
       {/* Table Container */}
       <div className="bg-white shadow-md rounded-xl p-4 md:p-6 overflow-x-auto">
-        <AdminHrManagement />
+        <AdminHrManagement reloadTrigger={reloadHRs} />
       </div>
     </div>
   );
