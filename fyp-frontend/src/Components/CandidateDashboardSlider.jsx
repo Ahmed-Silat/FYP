@@ -23,7 +23,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
 
   const handleApplyNow = () => {
     setShowInterviewModal(true);
-    onClose();
+    // onClose(); 
   };
 
   const handleInterviewComplete = () => {
@@ -103,13 +103,16 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
       </div>
 
       {showInterviewModal && (
-        <InterviewModal
-          jobTitle={jobDetails.job_title}
-          questions={jobDetails.questions || []}
-          onComplete={handleInterviewComplete}
-          onClose={() => setShowInterviewModal(false)}
-        />
-      )}
+  <InterviewModal
+    jobTitle={jobDetails.job_title}
+    questions={jobDetails.questions || []}
+    onComplete={() => {
+      handleInterviewComplete();
+      onClose(); // Close both modal and slider when interview is complete
+    }}
+    onClose={() => setShowInterviewModal(false)} // Just close the modal
+  />
+)}
     </>
   );
 };

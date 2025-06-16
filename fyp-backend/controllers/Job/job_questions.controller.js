@@ -80,18 +80,6 @@ export const createJobWithQuestions = async (req, res) => {
   }
 };
 
-// Get all jobs with their questions
-// export const getAllJobsWithQuestions = async (req, res) => {
-//   try {
-//     const jobs = await Job.findAll({
-//       include: [{ model: Question, as: "questions" }],
-//     });
-//     res.json(jobs);
-//   } catch (error) {
-//     console.error("Error fetching jobs:", error);
-//     res.status(500).json({ error: "Failed to fetch jobs" });
-//   }
-// };
 
 export const getAllJobsWithQuestions = async (req, res) => {
   try {

@@ -3,7 +3,7 @@ import { FaUsers, FaBriefcase, FaFileAlt, FaUserTie } from "react-icons/fa";
 import InfoCard from "../../Components/InfoCard";
 import AdminDashboardTable from "../../Components/AdminDashboardTable";
 import { getUserByRole } from "../../service/AuthService";
-import { getAllJobs } from "../../service/Job/JobQuestionService";
+import { fetchJobs } from "../../service/Job/JobQuestionService";
 
 const AdminDashboard = () => {
   const [candidateCount, setCandidateCount] = useState(0);
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
         const candidates = await getUserByRole("candidate");
         const hrMembers = await getUserByRole("hr");
         const admins = await getUserByRole("admin");
-        const getActiveJobs = await getAllJobs();
+        const getActiveJobs = await fetchJobs();
 
         setCandidateCount(candidates?.users?.length || 0);
         setHrCount(hrMembers?.users?.length || 0);

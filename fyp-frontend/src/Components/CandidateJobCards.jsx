@@ -43,8 +43,6 @@ const CandidateJobCards = () => {
     );
   }
 
-  console.log("job: " + jobs);
-
   return (
     <div className="bg-gray-100 min-h-screen w-full">
       <div className="flex flex-wrap p-6 gap-4">
