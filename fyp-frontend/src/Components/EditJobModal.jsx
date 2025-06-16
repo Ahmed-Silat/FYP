@@ -1,66 +1,54 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
-import { IoIosAdd } from "react-icons/io";
+import { IoIosSave } from "react-icons/io";
+import { updateJobWithQuestions } from "../service/Job/JobQuestionService";
 
 const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
-  // Initialize form state with jobData or defaults
   const defaultFormState = {
     jobTitle: "",
     jobDescription: "",
     questions: ["", "", ""],
     tags: [],
     tagInput: "",
+    errors: {},
   };
 
   const [formData, setFormData] = useState(defaultFormState);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Refs for input fields
   const jobTitleRef = useRef(null);
   const jobDescriptionRef = useRef(null);
   const tagInputRef = useRef(null);
-  const questionRefs = [useRef(null), useRef(null), useRef(null)];
 
-  // Initialize form with job data when modal opens or jobData changes
-  useEffect(() => {
-    if (isOpen && jobData) {
-      setFormData({
-        jobTitle: jobData.title || "",
-        jobDescription: jobData.description || "",
-        questions: jobData.questions || ["", "", ""],
-        tags: jobData.tags || [],
-        tagInput: "",
-      });
-      setErrors({});
-    }
-  }, [isOpen, jobData]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "auto";
+useEffect(() => {
+  if (jobData && isOpen) {
+    const questions = jobData.questions || ["", "", ""];
+    
+    // Ensure we have exactly 3 questions
+    const paddedQuestions = [...questions];
+    while (paddedQuestions.length < 3) {
+      paddedQuestions.push("");
     }
 
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
+    setFormData({
+      jobTitle: jobData.job_title || "",
+      jobDescription: jobData.job_description || "",
+      questions: paddedQuestions.slice(0, 3),
+      tags: Array.isArray(jobData.skills) ? jobData.skills : [],
+      tagInput: "",
+      errors: {}
+    });
+  }
+}, [jobData, isOpen]);
 
   const handleAddTag = (e) => {
     if (e.key === "Enter" && formData.tagInput.trim()) {
+      e.preventDefault();
+      const newTag = formData.tagInput.trim();
       setFormData({
         ...formData,
-        tags: [...formData.tags, formData.tagInput.trim()],
+        tags: [...formData.tags, newTag],
         tagInput: "",
       });
     }
@@ -111,44 +99,82 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      const updatedJob = {
-        ...jobData,
-        title: formData.jobTitle,
-        description: formData.jobDescription,
-        questions: formData.questions,
-        tags: formData.tags,
+    if (!validateForm() || isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      console.log("Submitting form with data:", formData);
+      
+      const jobPayload = {
+        job_title: formData.jobTitle,
+        job_description: formData.jobDescription,
+        skills: formData.tags,
       };
-      onSave(updatedJob);
-      handleClose();
+
+      const questionsPayload = formData.questions
+        .filter(q => q.trim())
+        .map(q => ({ question: q }));
+
+      console.log("Payload being sent:", { jobPayload, questionsPayload }); 
+
+      const response = await updateJobWithQuestions(
+        jobData.id,
+        jobPayload,
+        questionsPayload
+      );
+
+      console.log("API Response:", response); 
+
+      if (response && response.job) {
+        onSave({
+          ...response.job,
+          id: jobData.id,
+          job_title: formData.jobTitle,
+          job_description: formData.jobDescription,
+          skills: formData.tags,
+          questions: questionsPayload,
+        });
+      } else {
+        throw new Error("Invalid response from server");
+      }
+
+      onClose();
+    } catch (error) {
+      console.error("Error updating job:", error);
+      setErrors({
+        ...errors,
+        apiError: error.message || "Failed to update job. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    onClose();
+    if (!isSubmitting) {
+      onClose();
+    }
   };
 
-  if (!isOpen || !jobData) return null;
+  if (!isOpen) return null;
 
   return (
     <>
-      {/* Overlay */}
       <div
         className="fixed inset-0 bg-black opacity-80 z-40 transition-opacity duration-300 pointer-events-auto"
         onClick={handleClose}
       />
 
-      {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4 pointer-events-none">
         <div
           className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <form onSubmit={handleSubmit}>
-            {/* Header */}
             <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start rounded-t-xl">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">Edit Job</h2>
@@ -161,14 +187,13 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                 onClick={handleClose}
                 className="text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
                 aria-label="Close modal"
+                disabled={isSubmitting}
               >
                 <FaTimes className="text-xl" />
               </button>
             </div>
 
-            {/* Content */}
             <div className="p-6 space-y-6">
-              {/* Job Title */}
               <div className="space-y-2">
                 <label
                   htmlFor="jobTitle"
@@ -184,17 +209,16 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                   ref={jobTitleRef}
                   value={formData.jobTitle}
                   onChange={handleInputChange}
-                  placeholder="e.g. Frontend Developer"
                   className={`w-full px-4 py-2 border ${
                     errors.jobTitle ? "border-red-500" : "border-gray-300"
                   } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
+                  disabled={isSubmitting}
                 />
                 {errors.jobTitle && (
                   <p className="text-red-500 text-xs mt-1">{errors.jobTitle}</p>
                 )}
               </div>
 
-              {/* Job Description */}
               <div className="space-y-2">
                 <label
                   htmlFor="jobDescription"
@@ -209,11 +233,11 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                   ref={jobDescriptionRef}
                   value={formData.jobDescription}
                   onChange={handleInputChange}
-                  placeholder="Describe the role and responsibilities"
                   rows={4}
                   className={`w-full px-4 py-2 border ${
                     errors.jobDescription ? "border-red-500" : "border-gray-300"
                   } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
+                  disabled={isSubmitting}
                 />
                 {errors.jobDescription && (
                   <p className="text-red-500 text-xs mt-1">
@@ -222,14 +246,13 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                 )}
               </div>
 
-              {/* Tags */}
               <div className="space-y-2">
                 <label
                   htmlFor="tags"
                   className="block text-sm font-medium text-gray-700 cursor-pointer"
                   onClick={() => tagInputRef.current.focus()}
                 >
-                  Tags
+                  Tags (Skills)
                 </label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {formData.tags.map((tag, index) => (
@@ -242,6 +265,7 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                         type="button"
                         onClick={() => removeTag(index)}
                         className="ml-1 text-blue-600 hover:text-blue-800"
+                        disabled={isSubmitting}
                       >
                         ×
                       </button>
@@ -257,12 +281,12 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                     setFormData({ ...formData, tagInput: e.target.value })
                   }
                   onKeyDown={handleAddTag}
-                  placeholder="Add tags and press Enter"
+                  placeholder="Add skills/tags and press Enter"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  disabled={isSubmitting}
                 />
               </div>
 
-              {/* Questions */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-800">
                   Screening Questions *
@@ -271,15 +295,13 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                   <div key={index} className="space-y-2">
                     <label
                       htmlFor={`question-${index}`}
-                      className="block text-sm font-medium text-gray-700 cursor-pointer"
-                      onClick={() => questionRefs[index].current.focus()}
+                      className="block text-sm font-medium text-gray-700"
                     >
                       Question {index + 1}
                     </label>
                     <input
                       id={`question-${index}`}
                       type="text"
-                      ref={questionRefs[index]}
                       value={question}
                       onChange={(e) =>
                         handleQuestionChange(index, e.target.value)
@@ -289,7 +311,7 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                           ? "border-red-500"
                           : "border-gray-300"
                       } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
-                      placeholder={`e.g. What is your experience with React?`}
+                      disabled={isSubmitting}
                     />
                     {errors[`question${index}`] && (
                       <p className="text-red-500 text-xs mt-1">
@@ -299,15 +321,30 @@ const EditJobModal = ({ isOpen, onClose, jobData, onSave }) => {
                   </div>
                 ))}
               </div>
+
+              {errors.apiError && (
+                <div className="text-red-500 text-sm mt-2">
+                  {errors.apiError}
+                </div>
+              )}
             </div>
 
-            {/* Footer */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-xl">
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                className={`w-full ${
+                  isSubmitting ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+                } text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2`}
+                disabled={isSubmitting}
               >
-                Save Changes
+                {isSubmitting ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <IoIosSave size={20} />
+                    Save Changes
+                  </>
+                )}
               </button>
             </div>
           </form>

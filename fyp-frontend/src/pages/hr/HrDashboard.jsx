@@ -1,38 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Searchbar from "../../Components/Searchbar";
 import { IoIosAdd } from "react-icons/io";
 import HrJobCards from "../../Components/HrJobCards";
 import CreateJobModal from "../../Components/CreateJobModal";
-import EditJobModal from "../../Components/EditJobModal"; // Import the EditJobModal
+import EditJobModal from "../../Components/EditJobModal";
+import { fetchJobs, deleteJob } from "../../service/Job/JobQuestionService";
 
 const HrDashboard = () => {
+  const [jobs, setJobs] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Handle edit job click from HrJobCards
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        setIsLoading(true);
+        const user = JSON.parse(localStorage.getItem("userData"));
+        if (user?.user?.id) {
+          const jobsFromAPI = await fetchJobs(user.user.id);
+          setJobs(jobsFromAPI || []);
+        }
+      } catch (error) {
+        console.error("Failed to load jobs:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, []);
+
+  const handleAddJob = (newJob) => {
+    setJobs((prevJobs) => [
+      ...prevJobs,
+      {
+        ...newJob,
+        skills: Array.isArray(newJob.skills)
+          ? newJob.skills
+          : newJob.skills
+          ? [newJob.skills]
+          : [],
+        questions: newJob.questions || [], // Ensure questions exists
+      },
+    ]);
+    setIsCreateModalOpen(false);
+  };
+
   const handleEditJob = (job) => {
-    setEditingJob(job);
+    setEditingJob({
+      ...job,
+      skills: Array.isArray(job.skills)
+        ? job.skills
+        : job.skills
+        ? [job.skills]
+        : [],
+      questions: Array.isArray(job.questions)
+        ? job.questions.map((q) => (typeof q === "object" ? q.question : q))
+        : ["", "", ""], // Default empty questions if none exist
+    });
     setIsEditModalOpen(true);
   };
 
-  // Handle saving edited job
   const handleSaveJob = (updatedJob) => {
-    console.log("Updated job:", updatedJob);
-    // Here you would typically update the job in your state/API
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job.id === updatedJob.id
+          ? {
+              ...updatedJob,
+              skills: Array.isArray(updatedJob.skills)
+                ? updatedJob.skills
+                : updatedJob.skills
+                ? [updatedJob.skills]
+                : [],
+              questions: updatedJob.questions || job.questions,
+            }
+          : job
+      )
+    );
     setIsEditModalOpen(false);
-    setEditingJob(null);
+  };
+  
+  const handleDeleteJob = async (jobId) => {
+    try {
+      await deleteJob(jobId);
+      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+    } catch (error) {
+      console.error("Failed to delete job:", error);
+    }
   };
 
   return (
     <div className="px-4 md:px-8 py-6 bg-gray-50">
-      {/* Create Job Modal */}
       <CreateJobModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+        onCreate={handleAddJob}
       />
 
-      {/* Edit Job Modal */}
       <EditJobModal
         isOpen={isEditModalOpen}
         onClose={() => {
@@ -43,7 +109,6 @@ const HrDashboard = () => {
         onSave={handleSaveJob}
       />
 
-      {/* Header */}
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800">
           Hi, <span className="text-blue-600">HR Manager!</span>
@@ -53,7 +118,6 @@ const HrDashboard = () => {
         </p>
       </div>
 
-      {/* Controls: Search & Sort */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
           <Searchbar placeholder={"Search jobs..."} />
@@ -69,10 +133,17 @@ const HrDashboard = () => {
         </div>
       </div>
 
-      {/* Job Cards - Pass the handleEditJob function */}
-      <div>
-        <HrJobCards onEditJob={handleEditJob} />
-      </div>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <p className="text-gray-500">Loading jobs...</p>
+        </div>
+      ) : (
+        <HrJobCards
+          jobs={jobs}
+          onEditJob={handleEditJob}
+          onDeleteJob={handleDeleteJob}
+        />
+      )}
     </div>
   );
 };
