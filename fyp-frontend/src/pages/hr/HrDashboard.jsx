@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Searchbar from "../../Components/Searchbar";
 import { IoIosAdd } from "react-icons/io";
 import HrJobCards from "../../Components/HrJobCards";
 import CreateJobModal from "../../Components/CreateJobModal";
@@ -121,19 +120,14 @@ const HrDashboard = () => {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div className="flex-1">
-          <Searchbar placeholder={"Search jobs..."} />
-        </div>
-        <div>
-          <button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-300 hover:cursor-pointer"
-          >
-            <IoIosAdd size={20} />
-            Create Job
-          </button>
-        </div>
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition-colors duration-300 hover:cursor-pointer"
+        >
+          <IoIosAdd size={20} />
+          Create Job
+        </button>
       </div>
 
       {isLoading ? (
