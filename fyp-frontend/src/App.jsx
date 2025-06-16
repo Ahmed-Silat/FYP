@@ -9,7 +9,6 @@ import {
   Outlet,
 } from "react-router-dom";
 import Signup from "./pages/login-signup/Signup";
-import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 import Profile from "./pages/user-profile/Profile";
 import CandidateLayout from "./Components/CandidateLayout";
 import Results from "./pages/candidate/Results";
@@ -23,6 +22,7 @@ import AdminLayout from "./Components/AdminLayout";
 import { useAuth } from "./contexts/authContext";
 import Companies from "./pages/admin/Companies";
 import ForgotPassword from "./pages/login-signup/ForgotPassword";
+import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 
 function App() {
   const { user, userData, loading } = useAuth();

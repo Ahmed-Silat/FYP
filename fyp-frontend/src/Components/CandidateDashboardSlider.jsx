@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
-import InterviewModal from "./InterviewModal"; // Make sure to import your InterviewModal component
+import InterviewModal from "./InterviewModal";
 
-const CandidateDashboardSlider = ({ isOpen, onClose }) => {
+const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
   const [showInterviewModal, setShowInterviewModal] = useState(false);
-  const [jobDetails] = useState({
-    title: "Data Visualization Developer",
-    questions: [
-      "Tell us about your experience with data visualization libraries.",
-      "How would you optimize a dashboard rendering large datasets?",
-      "Describe a challenging data visualization problem you solved.",
-    ],
-  });
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -31,17 +23,17 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
 
   const handleApplyNow = () => {
     setShowInterviewModal(true);
-    onClose(); // Close the slider when opening the interview modal
+    onClose();
   };
 
   const handleInterviewComplete = () => {
     setShowInterviewModal(false);
-    // You might want to show a toast notification here
   };
+
+  if (!jobDetails) return null;
 
   return (
     <>
-      {/* Overlay with conditional rendering and transition */}
       <div
         className={`fixed inset-0 bg-black z-40 transition-opacity duration-300 ease-in-out ${
           isOpen ? "opacity-80" : "opacity-0 pointer-events-none"
@@ -49,7 +41,6 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
 
-      {/* Sidebar */}
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white z-50 shadow-xl overflow-y-auto transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -57,7 +48,7 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold text-gray-800">
-            {jobDetails.title}
+            {jobDetails.job_title || "Untitled Position"}
           </h2>
           <button
             onClick={onClose}
@@ -68,29 +59,34 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="text-sm text-gray-600">DataViz Corp</div>
-          <div className="text-xs text-gray-400">Posted 2 weeks ago</div>
+          <div className="text-sm text-gray-600">
+            {jobDetails.user.company.company_name || "Company not specified"}
+          </div>
+          <div className="text-xs text-gray-400">
+            Posted {jobDetails.createdAt ? new Date(jobDetails.createdAt).toLocaleDateString() : "Date not available"}
+          </div>
 
           <div>
             <h3 className="font-medium text-gray-700">Description</h3>
             <p className="text-gray-600 mt-1 text-sm">
-              Looking for a talented developer to create interactive data
-              visualizations for our business intelligence platform.
+              {jobDetails.job_description || "No description provided"}
             </p>
           </div>
 
           <div>
             <h3 className="font-medium text-gray-700 mb-2">Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {["JavaScript", "D3.js", "React", "Data Analysis"].map(
-                (skill, idx) => (
+              {Array.isArray(jobDetails.skills) && jobDetails.skills.length > 0 ? (
+                jobDetails.skills.map((skill, idx) => (
                   <span
                     key={idx}
                     className="bg-gray-200 text-gray-700 font-semibold text-xs px-3 py-1 rounded-full"
                   >
                     {skill}
                   </span>
-                )
+                ))
+              ) : (
+                <span className="text-gray-400 text-xs">No skills specified</span>
               )}
             </div>
           </div>
@@ -106,11 +102,10 @@ const CandidateDashboardSlider = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      {/* Interview Modal */}
       {showInterviewModal && (
         <InterviewModal
-          jobTitle={jobDetails.title}
-          questions={jobDetails.questions}
+          jobTitle={jobDetails.job_title}
+          questions={jobDetails.questions || []}
           onComplete={handleInterviewComplete}
           onClose={() => setShowInterviewModal(false)}
         />
