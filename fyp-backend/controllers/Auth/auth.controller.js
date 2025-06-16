@@ -1,3 +1,4 @@
+import admin from "../../config/firebaseAdmin.js";
 import User from "../../models/UserAuth/User.js";
 import Company from "../../models/company/Company.js";
 
@@ -100,23 +101,43 @@ export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findByPk(id);
+    // Get currently logged-in user's email from token (assuming you have auth middleware)
+    const currentUserEmail = req.user?.email; // or however you're decoding the token
 
+    const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Prevent self-deletion
+    if (user.email === currentUserEmail) {
+      return res
+        .status(403)
+        .json({ error: "You cannot delete yourself while logged in" });
+    }
+
+    // Delete from DB
     await user.destroy();
 
-    res.status(200).json({
-      message: "User deleted successfully",
-    });
+    // Delete from Firebase
+    try {
+      if (user.firebase_id) {
+        await admin.auth().deleteUser(user.firebase_id);
+      } else {
+        const fbUser = await admin.auth().getUserByEmail(user.email);
+        await admin.auth().deleteUser(fbUser.uid);
+      }
+    } catch (firebaseError) {
+      console.warn(
+        "Deleted from DB but failed to delete from Firebase:",
+        firebaseError.message
+      );
+    }
+
+    res.status(200).json({ message: "User deleted from DB and Firebase" });
   } catch (error) {
-    console.error("Detailed error:", error);
-    res.status(500).json({
-      error: "Internal server error",
-      details: error.message,
-    });
+    console.error("Error deleting user:", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -154,13 +175,14 @@ export const getUserByRole = async (req, res) => {
     const { role } = req.query;
 
     const users = await User.findAll({
-      where: {
-        role: role,
+      where: { role },
+      include: {
+        model: Company,
+        required: false, // ✅ Now includes users with or without company
       },
-      include: { model: Company, required: true },
     });
 
-    if (!users) {
+    if (!users || users.length === 0) {
       return res.status(404).json({ error: "No users found" });
     }
 
@@ -171,7 +193,7 @@ export const getUserByRole = async (req, res) => {
         full_name: user.full_name,
         email: user.email,
         role: user.role,
-        company: user.Company,
+        company: user.Company || null,
       })),
     });
   } catch (error) {

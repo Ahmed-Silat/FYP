@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getJobApplicationCounts } from "../service/CandidateApplicationService"; // ✅ Adjust the path if needed
 
 const AdminDashboardTable = () => {
-  const data = [
-    {
-      jobTitle: "Frontend Developer",
-      postedOn: "May 10, 2025",
-      applicants: 18,
-    },
-    {
-      jobTitle: "UI/UX Designer",
-      postedOn: "May 8, 2025",
-      applicants: 11,
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  // Helper function to format date as "Month Day, Year"
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("en-US", options);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jobs = await getJobApplicationCounts();
+        // console.log("Fetched job application data:", jobs);
+        const formatted = jobs.map((job) => ({
+          jobTitle: job.jobTitle,
+          applicants: job.applicantCount,
+          postedOn: formatDate(job.createdAt),
+        }));
+        setData(formatted);
+      } catch (error) {
+        console.error("Failed to fetch job application data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="overflow-x-auto mx-4 my-6">

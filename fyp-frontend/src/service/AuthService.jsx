@@ -52,3 +52,16 @@ export const getUserByRole = async (role) => {
   });
   return data;
 };
+
+export const deleteUser = async (userId) => {
+  try {
+    const { data } = await axios.delete(
+      `${EXPRESS_API_URL}/user/delete/${userId}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Delete user error:", error);
+    throw error;
+  }
+};
+
