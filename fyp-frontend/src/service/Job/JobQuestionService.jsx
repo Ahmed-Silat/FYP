@@ -41,6 +41,26 @@ export const createJobWithQuestions = async (job, questions) => {
   }
 };
 
+// export const fetchJobs = async (userId) => {
+//   try {
+//     const { data } = await axios.get(`${EXPRESS_API_URL}/job/getJobs`, {
+//       params: {
+//         user_id: userId,
+//         include_questions: true,
+//       },
+//     });
+
+//     return data.map((job) => ({
+//       ...job,
+//       skills: Array.isArray(job.skills) ? job.skills : [],
+//       questions: job.questions || [],
+//     }));
+//   } catch (error) {
+//     console.error("Error fetching jobs:", error);
+//     throw error;
+//   }
+// };
+
 export const fetchJobs = async (userId) => {
   try {
     const { data } = await axios.get(`${EXPRESS_API_URL}/job/getJobs`, {
@@ -50,10 +70,24 @@ export const fetchJobs = async (userId) => {
       },
     });
 
-    return data.map((job) => ({
-      ...job,
+    return data.data.map((job) => ({
+      id: job.id,
+      job_title: job.job_title,
+      job_description: job.job_description,
       skills: Array.isArray(job.skills) ? job.skills : [],
+      user_id: job.user_id,
+      createdAt: job.createdAt,
+      updatedAt: job.updatedAt,
       questions: job.questions || [],
+      user: job.user ? {
+        id: job.user.id,
+        full_name: job.user.full_name,
+        email: job.user.email,
+        company: job.user.company ? {
+          id: job.user.company.id,
+          company_name: job.user.company.company_name
+        } : null
+      } : null
     }));
   } catch (error) {
     console.error("Error fetching jobs:", error);
@@ -96,6 +130,21 @@ export const deleteJob = async (jobId) => {
     await axios.delete(`${EXPRESS_API_URL}/job/${jobId}`);
   } catch (error) {
     console.error("Error deleting job:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getJobsByUserId = async (userId) => {
+  try {
+    const { data } = await axios.get(`${EXPRESS_API_URL}/job/user/${userId}`);
+    
+    return data.map((job) => ({
+      ...job,
+      skills: Array.isArray(job.skills) ? job.skills : [],
+      questions: job.questions || [],
+    }));
+  } catch (error) {
+    console.error("Error fetching jobs by user ID:", error);
     throw error;
   }
 };

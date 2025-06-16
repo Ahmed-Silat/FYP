@@ -1,6 +1,10 @@
 // controllers/jobController.js
 import Job from "../../models/Job/Job.js";
 import Question from "../../models/Questions/Question.js";
+import User from "../../models/UserAuth/user.js";
+
+import Company from "../../models/Company/Company.js";
+
 import db from "../../db.js";
 
 export const createJobWithQuestions = async (req, res) => {
@@ -77,15 +81,61 @@ export const createJobWithQuestions = async (req, res) => {
 };
 
 // Get all jobs with their questions
+// export const getAllJobsWithQuestions = async (req, res) => {
+//   try {
+//     const jobs = await Job.findAll({
+//       include: [{ model: Question, as: "questions" }],
+//     });
+//     res.json(jobs);
+//   } catch (error) {
+//     console.error("Error fetching jobs:", error);
+//     res.status(500).json({ error: "Failed to fetch jobs" });
+//   }
+// };
+
 export const getAllJobsWithQuestions = async (req, res) => {
   try {
     const jobs = await Job.findAll({
-      include: [{ model: Question, as: "questions" }],
+      include: [
+        { 
+          model: Question, 
+          as: "questions" 
+        },
+        {
+          model: User,
+          as: "user",
+          attributes: ['id', 'full_name', 'email'],
+          include: [{
+            model: Company,
+            as: "company",
+            attributes: ['id', 'company_name']
+          }]
+        }
+      ],
+      order: [['createdAt', 'DESC']]
     });
-    res.json(jobs);
+    
+    // Format the response to include all necessary data
+    const formattedJobs = jobs.map(job => ({
+      ...job.toJSON(),
+      user: job.user ? {
+        ...job.user.toJSON(),
+        company: job.user.company ? job.user.company.toJSON() : null
+      } : null
+    }));
+
+    res.json({
+      success: true,
+      count: jobs.length,
+      data: formattedJobs
+    });
   } catch (error) {
-    console.error("Error fetching jobs:", error);
-    res.status(500).json({ error: "Failed to fetch jobs" });
+    console.error("Detailed error:", error);
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to fetch jobs",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

@@ -3,7 +3,7 @@ import { IoIosAdd } from "react-icons/io";
 import HrJobCards from "../../Components/HrJobCards";
 import CreateJobModal from "../../Components/CreateJobModal";
 import EditJobModal from "../../Components/EditJobModal";
-import { fetchJobs, deleteJob } from "../../service/Job/JobQuestionService";
+import { getJobsByUserId, deleteJob } from "../../service/Job/JobQuestionService";
 
 const HrDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -15,13 +15,14 @@ const HrDashboard = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
   const userName = user?.user?.full_name;
 
-  useEffect(() => {
+ useEffect(() => {
     const loadJobs = async () => {
       try {
         setIsLoading(true);
         const user = JSON.parse(localStorage.getItem("userData"));
         if (user?.user?.id) {
-          const jobsFromAPI = await fetchJobs(user.user.id);
+          // Use the new getJobsByUserId function instead of fetchJobs
+          const jobsFromAPI = await getJobsByUserId(user.user.id);
           setJobs(jobsFromAPI || []);
         }
       } catch (error) {
