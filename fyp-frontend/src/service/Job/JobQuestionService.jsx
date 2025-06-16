@@ -41,26 +41,6 @@ export const createJobWithQuestions = async (job, questions) => {
   }
 };
 
-// export const fetchJobs = async (userId) => {
-//   try {
-//     const { data } = await axios.get(`${EXPRESS_API_URL}/job/getJobs`, {
-//       params: {
-//         user_id: userId,
-//         include_questions: true,
-//       },
-//     });
-
-//     return data.map((job) => ({
-//       ...job,
-//       skills: Array.isArray(job.skills) ? job.skills : [],
-//       questions: job.questions || [],
-//     }));
-//   } catch (error) {
-//     console.error("Error fetching jobs:", error);
-//     throw error;
-//   }
-// };
-
 export const fetchJobs = async (userId) => {
   try {
     const { data } = await axios.get(`${EXPRESS_API_URL}/job/getJobs`, {

@@ -123,7 +123,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndex].question;
 
   return (
     <div className="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50">
