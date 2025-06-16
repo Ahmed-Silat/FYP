@@ -85,7 +85,7 @@ const Signup = () => {
 
   return (
     <>
-      {userLoggedIn && <Navigate to="/" replace={true} />}
+      {/* {userLoggedIn && <Navigate to="/" replace={true} />} */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4" style={{ backgroundColor: '#F8FAFC' }}>
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
           <div className="text-center mb-8">

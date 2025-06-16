@@ -14,15 +14,20 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      // ✅ Only update if user changed
+      setUser((prevUser) => {
+        if (prevUser?.uid === authUser?.uid) return prevUser;
+        return authUser;
+      });
+
+      if (authUser) {
         const storedData = localStorage.getItem("userData");
         if (storedData) {
           setUserData(JSON.parse(storedData));
         } else {
           try {
-            const data = await login(user.uid);
+            const data = await login(authUser.uid);
             localStorage.setItem("userData", JSON.stringify(data));
             setUserData(data);
           } catch (error) {
@@ -33,10 +38,11 @@ export function AuthProvider({ children }) {
         setUserData(null);
         localStorage.removeItem("userData");
       }
+
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const value = {

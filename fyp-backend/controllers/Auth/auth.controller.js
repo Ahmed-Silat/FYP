@@ -178,13 +178,9 @@ export const getUserByRole = async (req, res) => {
       where: { role },
       include: {
         model: Company,
-        required: false, // ✅ Now includes users with or without company
+        required: false, // ✅ Includes users with or without company
       },
     });
-
-    if (!users || users.length === 0) {
-      return res.status(404).json({ error: "No users found" });
-    }
 
     res.status(200).json({
       users: users.map((user) => ({
