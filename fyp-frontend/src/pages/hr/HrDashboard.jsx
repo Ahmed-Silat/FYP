@@ -13,6 +13,9 @@ const HrDashboard = () => {
   const [editingJob, setEditingJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userName = user?.user?.full_name;
+
   useEffect(() => {
     const loadJobs = async () => {
       try {
@@ -81,7 +84,7 @@ const HrDashboard = () => {
     );
     setIsEditModalOpen(false);
   };
-  
+
   const handleDeleteJob = async (jobId) => {
     try {
       await deleteJob(jobId);
@@ -111,7 +114,7 @@ const HrDashboard = () => {
 
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800">
-          Hi, <span className="text-blue-600">HR Manager!</span>
+          Hi, <span className="text-blue-600">HR {userName}!</span>
         </h2>
         <p className="text-gray-500 text-sm mt-1">
           Welcome back to your dashboard 👋
