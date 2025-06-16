@@ -22,11 +22,8 @@ import AdminLayout from "./Components/AdminLayout";
 import { useAuth } from "./contexts/authContext";
 import Companies from "./pages/admin/Companies";
 import ForgotPassword from "./pages/login-signup/ForgotPassword";
-<<<<<<< HEAD
 import RedirectToDashboard from "./pages/common/RedirectToDashboard";
-=======
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
->>>>>>> 6b50e5b0860de0280a6b5d0b7d8977699948fa8d
 
 function App() {
   const { user, userData, loading } = useAuth();
