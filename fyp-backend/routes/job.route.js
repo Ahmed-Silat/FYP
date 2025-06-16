@@ -4,16 +4,15 @@ import {
   getAllJobsWithQuestions,
   updateJobWithQuestions,
   deleteJobWithQuestions,   
-  getJobsByUserId
+  getJobsByUserId,
 } from '../controllers/Job/job_questions.controller.js';
 
 const router = express.Router();
 
-router.post("/job-with-questions", createJobWithQuestions);
-router.get("/", getAllJobsWithQuestions);
+router.post("/createJobs", createJobWithQuestions);
+router.get("/getJobs", getAllJobsWithQuestions);
 router.put('/:id', updateJobWithQuestions);
 router.delete('/:id', deleteJobWithQuestions);
-router.get('/:userId', getJobsByUserId);
-
+router.get("/user/:userId", getJobsByUserId);
 
 export default router;
