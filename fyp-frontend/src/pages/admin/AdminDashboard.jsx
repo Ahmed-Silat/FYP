@@ -3,12 +3,14 @@ import { FaUsers, FaBriefcase, FaFileAlt, FaUserTie } from "react-icons/fa";
 import InfoCard from "../../Components/InfoCard";
 import AdminDashboardTable from "../../Components/AdminDashboardTable";
 import { getUserByRole } from "../../service/AuthService";
+import { getAllJobs } from "../../service/Job/JobQuestionService";
 
 const AdminDashboard = () => {
   const [candidateCount, setCandidateCount] = useState(0);
   const [hrCount, setHrCount] = useState(0);
   const [adminCount, setAdminCount] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
+  const [activeJobs, setActiveJobs] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,10 +24,12 @@ const AdminDashboard = () => {
         const candidates = await getUserByRole("candidate");
         const hrMembers = await getUserByRole("hr");
         const admins = await getUserByRole("admin");
+        const getActiveJobs = await getAllJobs();
 
         setCandidateCount(candidates?.users?.length || 0);
         setHrCount(hrMembers?.users?.length || 0);
         setAdminCount(admins?.users?.length || 0);
+        setActiveJobs(getActiveJobs?.length || 0);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -59,7 +63,11 @@ const AdminDashboard = () => {
           value={candidateCount.toString()}
           icon={FaUsers}
         />
-        <InfoCard title="Active Jobs" value="43" icon={FaBriefcase} />
+        <InfoCard
+          title="Active Jobs"
+          value={activeJobs.toString()}
+          icon={FaBriefcase}
+        />
         <InfoCard
           title="Total Users"
           value={(candidateCount + hrCount + adminCount).toString()}

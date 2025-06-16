@@ -3,6 +3,7 @@ import {
   createCandidateApplication,
   getAllCandidateApplications,
   getApplicationsByUserId,
+  getCandidatesWithApplicationCount,
   getJobApplicationCounts,
   updateCandidateApplication,
 } from "../controllers/CandidateApplication/CandidateApplication.controller.js";
@@ -14,5 +15,6 @@ router.put("/updateApplication/:id", updateCandidateApplication);
 router.get("/getAll", getAllCandidateApplications);
 router.get("/getByUserId/:userId", getApplicationsByUserId);
 router.get("/getJobApplicationsCount", getJobApplicationCounts);
+router.get("/candidatesWithJobCount", getCandidatesWithApplicationCount);
 
 export default router;
