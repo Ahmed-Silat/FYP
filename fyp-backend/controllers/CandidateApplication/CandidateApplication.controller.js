@@ -150,3 +150,32 @@ export const getApplicationsByUserId = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch applications." });
   }
 };
+
+export const getCandidatesWithApplicationCount = async (req, res) => {
+  try {
+    const candidates = await User.findAll({
+      where: { role: "candidate" },
+      attributes: ["id", "full_name", "email"],
+    });
+
+    const result = await Promise.all(
+      candidates.map(async (candidate) => {
+        const count = await CandidateApplication.count({
+          where: { user_id: candidate.id },
+        });
+
+        return {
+          id: candidate.id, // ✅ include ID here
+          name: candidate.full_name,
+          email: candidate.email,
+          appliedJobsCount: count,
+        };
+      })
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching candidate applications:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};

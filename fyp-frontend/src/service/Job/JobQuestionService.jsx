@@ -99,3 +99,16 @@ export const deleteJob = async (jobId) => {
     throw error;
   }
 };
+
+export const getAllJobs = async () => {
+  try {
+    const { data } = await axios.get(`${EXPRESS_API_URL}/job/getjobs`);
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching all jobs:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

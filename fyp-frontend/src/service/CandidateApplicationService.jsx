@@ -8,3 +8,10 @@ export const getJobApplicationCounts = async () => {
   );
   return data;
 };
+
+export const getCandidatesWithApplicationCount = async () => {
+  const { data } = await axios.get(
+    `${EXPRESS_API_URL}/applications/candidatesWithJobCount`
+  );
+  return data;
+};
