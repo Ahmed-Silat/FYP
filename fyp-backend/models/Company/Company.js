@@ -1,7 +1,7 @@
 // models/Company.js
 import { DataTypes } from "sequelize";
 import db from "../../db.js";
-import User from "../UserAuth/User.js";
+import User from "../UserAuth/user.js";
 
 const Company = db.define(
   "Company",

@@ -4,13 +4,20 @@ import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
 import process from "process";
-import Company from "./company/Company.js";
-import User from "./UserAuth/User.js";
+// import Company from "./company/Company.js";
+// import User from "./UserAuth/user.js";
 
-import Job from "./Job/Job.js";
-import Question from "./Questions/Question.js";
-import Video from "./Videos/Video.js";
-import CandidateApplication from "./CandidateApplication/CandidateApplication.js";
+import User from "../models/UserAuth/user.js";
+import Company from "../models/Company/Company.js";
+import Job from "../models/Job/Job.js";
+import Video from "../models/Videos/Video.js";
+import CandidateApplication from "../models/CandidateApplication/CandidateApplication.js";
+import Question from "../models/Questions/Question.js";
+
+// import Job from "./Job/Job.js";
+// import Question from "./Questions/Question.js";
+// import Video from "./Videos/Video.js";
+// import CandidateApplication from "./CandidateApplication/CandidateApplication.js";
 
 // import configFile from "../config/config.json";
 
@@ -136,3 +143,17 @@ Job.hasMany(CandidateApplication, {
   onUpdate: "CASCADE",
   onDelete: "CASCADE",
 });
+
+// Add these associations to your existing ones
+
+Job.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
+});
+
+User.belongsTo(Company, {
+  foreignKey: "company_id",
+  as: "company",
+ });

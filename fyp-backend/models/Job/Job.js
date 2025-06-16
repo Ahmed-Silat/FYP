@@ -1,6 +1,7 @@
 // models/Job.js
 import { DataTypes } from "sequelize";
 import db from "../../db.js";
+// import User from "../UserAuth/user.js";
 
 const Job = db.define(
   "Job",

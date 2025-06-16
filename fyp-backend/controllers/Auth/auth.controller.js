@@ -1,6 +1,6 @@
 import admin from "../../config/firebaseAdmin.js";
-import User from "../../models/UserAuth/User.js";
-import Company from "../../models/company/Company.js";
+import User from "../../models/UserAuth/user.js";
+import Company from "../../models/Company/Company.js";
 
 export const createUser = async (req, res) => {
   try {
