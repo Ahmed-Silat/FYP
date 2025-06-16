@@ -1,6 +1,5 @@
 import React from "react";
 import AdminCandidateManagement from "../../Components/AdminCandidateManagement";
-import Searchbar from "../../Components/Searchbar";
 
 const Candidates = () => {
   return (
@@ -13,11 +12,6 @@ const Candidates = () => {
         <p className="text-sm md:text-base text-gray-500 mt-1">
           View candidate details and streamline application tracking.
         </p>
-      </div>
-
-      {/* Searchbar */}
-      <div className="mb-6">
-        <Searchbar placeholder="Search candidates..." />
       </div>
 
       {/* Candidate Management Table */}

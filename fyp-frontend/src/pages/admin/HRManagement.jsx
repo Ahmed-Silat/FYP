@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AdminHrManagement from "../../Components/AdminHrManagement";
-import Searchbar from "../../Components/Searchbar";
 import { IoIosAdd } from "react-icons/io";
 import CreateHrModal from "../../Components/CreateHrModal"; // Adjust path as needed
 
@@ -32,9 +31,8 @@ const HRManagement = () => {
         </p>
       </div>
 
-      {/* Searchbar and Add HR Button */}
+      {/* Add HR Button */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <Searchbar placeholder={"Search HR members..."} />
         <button
           onClick={() => setIsModalOpen(true)}
           className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition cursor-pointer"

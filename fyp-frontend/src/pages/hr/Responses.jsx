@@ -1,15 +1,7 @@
 import React from "react";
 import HrResponsesTable from "../../Components/HrResponsesTable";
-import Searchbar from "../../Components/Searchbar";
-import TableSort from "../../Components/TableSort";
 
 const Responses = () => {
-  const sortOptions = [
-    { label: "Job Title", value: "jobTitle" },
-    { label: "Candidate Name", value: "candidateName" },
-    { label: "Date", value: "date" },
-    { label: "Score", value: "score" },
-  ];
 
   return (
     <div className="p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen">
@@ -21,12 +13,6 @@ const Responses = () => {
         <p className="mt-1 text-gray-500 text-sm md:text-base">
           Track, review, and evaluate candidate video submissions.
         </p>
-      </div>
-
-      {/* Controls Section */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
-        <Searchbar placeholder="Search candidates..." />
-        <TableSort options={sortOptions} />
       </div>
 
       {/* Main Content Card */}
