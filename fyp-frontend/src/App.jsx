@@ -6,6 +6,7 @@ import {
   Route,
   Routes,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 import Signup from "./pages/login-signup/Signup";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
@@ -21,6 +22,7 @@ import HRManagement from "./pages/admin/HRManagement";
 import AdminLayout from "./Components/AdminLayout";
 import { useAuth } from "./contexts/authContext";
 import Companies from "./pages/admin/Companies";
+import ForgotPassword from "./pages/login-signup/ForgotPassword";
 
 function App() {
   const { user, userData, loading } = useAuth();
@@ -28,95 +30,89 @@ function App() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        Loading...
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#101828]"></div>
       </div>
     );
   }
+
+  // Protected Route Wrapper
+  const ProtectedRoute = ({ children, roles }) => {
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    
+    if (roles && !roles.includes(userData?.user?.role)) {
+      return <Navigate to="/" replace />;
+    }
+    
+    return children ? children : <Outlet />;
+  };
 
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/signup"
-          element={!user ? <Signup /> : <Navigate to="/" replace />}
-        />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
+        <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" replace />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />       
 
         {/* Default Route */}
         <Route
           path="/"
           element={
-            user ? (
-              userData?.user.role === "candidate" ? (
-                <Navigate to="/candidate" replace />
-              ) : userData?.user.role === "hr" ? (
-                <Navigate to="/hr" replace />
-              ) : userData?.user.role === "admin" ? (
-                <Navigate to="/admin" replace />
+            <ProtectedRoute>
+              {userData?.user?.role === "candidate" ? (
+                <Navigate to="/candidate/dashboard" replace />
+              ) : userData?.user?.role === "hr" ? (
+                <Navigate to="/hr/dashboard" replace />
+              ) : userData?.user?.role === "admin" ? (
+                <Navigate to="/admin/dashboard" replace />
               ) : (
                 <Navigate to="/login" replace />
-              )
-            ) : (
-              <Navigate to="/login" replace />
-            )
+              )}
+            </ProtectedRoute>
           }
         />
 
         {/* Candidate Routes */}
         <Route
-          path="/candidate"
           element={
-            user && userData?.user.role === "candidate" ? (
+            <ProtectedRoute roles={["candidate"]}>
               <CandidateLayout />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<CandidateDashboard />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="results" element={<Results />} />
+          <Route path="candidate/dashboard" element={<CandidateDashboard />} />
+          <Route path="candidate/profile" element={<Profile />} />
+          <Route path="candidate/results" element={<Results />} />
         </Route>
 
         {/* HR Routes */}
         <Route
-          path="/hr"
           element={
-            user && userData?.user.role === "hr" ? (
+            <ProtectedRoute roles={["hr"]}>
               <HrLayout />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<HrDashboard />} />
-          <Route path="responses" element={<Responses />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="hr/dashboard" element={<HrDashboard />} />
+          <Route path="hr/responses" element={<Responses />} />
+          <Route path="hr/profile" element={<Profile />} />
         </Route>
 
         {/* Admin Routes */}
         <Route
-          path="/admin"
           element={
-            user && userData?.user.role === "admin" ? (
+            <ProtectedRoute roles={["admin"]}>
               <AdminLayout />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="candidates" element={<Candidates />} />
-          <Route path="hr-management" element={<HRManagement />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="companies" element={<Companies />} />
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/candidates" element={<Candidates />} />
+          <Route path="admin/hr-management" element={<HRManagement />} />
+          <Route path="admin/profile" element={<Profile />} />
+          <Route path="admin/companies" element={<Companies />} />
         </Route>
 
         {/* Catch-all Route */}
