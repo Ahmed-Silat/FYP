@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import CandidateApplication from "../../models/CandidateApplication/CandidateApplication.js";
 import Job from "../../models/Job/Job.js";
 import User from "../../models/UserAuth/User.js";
@@ -48,12 +49,10 @@ export const updateCandidateApplication = async (req, res) => {
 
     await application.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Candidate application updated successfully.",
-        application,
-      });
+    res.status(200).json({
+      message: "Candidate application updated successfully.",
+      application,
+    });
   } catch (error) {
     console.error("Error updating candidate application:", error);
     res.status(500).json({ error: "Failed to update candidate application." });
@@ -79,6 +78,45 @@ export const getAllCandidateApplications = async (req, res) => {
   } catch (error) {
     console.error("Error fetching candidate applications:", error);
     res.status(500).json({ error: "Failed to fetch candidate applications" });
+  }
+};
+
+export const getJobApplicationCounts = async (req, res) => {
+  try {
+    const applications = await CandidateApplication.findAll({
+      attributes: [
+        "job_id",
+        [
+          Sequelize.fn("COUNT", Sequelize.col("CandidateApplication.id")),
+          "applicantCount",
+        ],
+      ],
+      include: [
+        {
+          model: Job,
+          attributes: ["job_title", "createdAt"], // ✅ include job creation date
+          required: true,
+        },
+      ],
+      group: [
+        "CandidateApplication.job_id",
+        "Job.id",
+        "Job.job_title",
+        "Job.createdAt",
+      ],
+    });
+
+    const result = applications.map((app) => ({
+      jobId: app.job_id,
+      jobTitle: app.Job.job_title,
+      applicantCount: parseInt(app.getDataValue("applicantCount"), 10),
+      createdAt: app.Job.createdAt, // ✅ include createdAt
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching job application counts:", error);
+    res.status(500).json({ error: "Failed to fetch application stats" });
   }
 };
 

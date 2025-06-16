@@ -3,7 +3,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import EditHrModal from "./EditHrModal";
 import DeleteModal from "./DeleteModal";
-import { getUserByRole } from "../service/AuthService"; // ✅ adjust this path as needed
+import { deleteUser, getUserByRole } from "../service/AuthService"; // ✅ adjust this path as needed
 import { useSearchParams } from "react-router";
 
 const AdminHrManagement = ({ reloadTrigger }) => {
@@ -46,6 +46,7 @@ const AdminHrManagement = ({ reloadTrigger }) => {
 
   const handleDeleteClick = (hr) => {
     setSelectedHr(hr);
+
     setDeleteModalOpen(true);
   };
 
@@ -58,9 +59,26 @@ const AdminHrManagement = ({ reloadTrigger }) => {
     );
   };
 
-  const handleDeleteConfirm = () => {
-    setData(data.filter((item) => item.email !== selectedHr.email));
-    setDeleteModalOpen(false);
+  const handleDeleteConfirm = async () => {
+    if (!selectedHr || !selectedHr.id) {
+      console.error("No HR selected or missing ID.");
+      return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem("userData"));
+    if (currentUser?.email === selectedHr.email) {
+      alert("You cannot delete your own account while logged in.");
+      return;
+    }
+
+    try {
+      await deleteUser(selectedHr.id);
+      setData((prev) => prev.filter((item) => item.id !== selectedHr.id)); // Update UI
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Failed to delete HR user. Please try again.");
+    }
   };
 
   if (loading) {
