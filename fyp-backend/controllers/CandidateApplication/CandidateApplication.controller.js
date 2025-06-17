@@ -1,7 +1,8 @@
 import { Sequelize } from "sequelize";
 import CandidateApplication from "../../models/CandidateApplication/CandidateApplication.js";
 import Job from "../../models/Job/Job.js";
-import User from "../../models/UserAuth/User.js";
+import User from "../../models/UserAuth/user.js";
+import Company from "../../models/Company/Company.js";
 
 export const createCandidateApplication = async (req, res) => {
   try {
@@ -134,11 +135,25 @@ export const getApplicationsByUserId = async (req, res) => {
         {
           model: Job,
           required: true,
+          include: [
+            {
+              model: User,
+              as: 'user',  
+              required: true,
+              include: [
+                {
+                  model: Company,
+                  as: 'company',  
+                  required: false,
+                }
+              ]
+            }
+          ]
         },
       ],
     });
 
-    if (applications.length === 0) {
+      if (applications.length === 0) {
       return res
         .status(404)
         .json({ message: "No applications found for this user." });
@@ -150,6 +165,7 @@ export const getApplicationsByUserId = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch applications." });
   }
 };
+
 
 export const getCandidatesWithApplicationCount = async (req, res) => {
   try {

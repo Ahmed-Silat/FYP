@@ -43,9 +43,12 @@ const CandidateResultsModal = ({ isOpen, onClose, selectedResult }) => {
           <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start rounded-t-xl">
             <div>
               <h2 className="text-2xl font-bold text-gray-800">
-                {selectedResult.title}
+                {selectedResult.Job.job_title}
               </h2>
-              <p className="text-gray-600 mt-1">{selectedResult.company}</p>
+              <p className="text-gray-600 mt-1">
+                {selectedResult.Job?.user?.company?.company_name ||
+                  "Company not specified"}
+              </p>
             </div>
             <button
               onClick={onClose}
@@ -63,66 +66,38 @@ const CandidateResultsModal = ({ isOpen, onClose, selectedResult }) => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-500">Status</p>
                 <p className="mt-1 font-medium">
-                  <span className={getStatusBadge(selectedResult.status)}>
-                    {selectedResult.status}
+                  <span
+                    className={getStatusBadge(
+                      selectedResult.application_status
+                    )}
+                  >
+                    {selectedResult.application_status}
                   </span>
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-500">Applied On</p>
-                <p className="mt-1 font-medium text-gray-800">
-                  {selectedResult.date}
-                </p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-500">Your Score</p>
-                <p className="mt-1 font-medium text-gray-800">92/100</p>
+                <p className="mt-1 font-medium text-gray-800">
+                  {/* {selectedResult.score || "0"}/100 */}
+                  {selectedResult.score !== null &&
+                  selectedResult.score !== undefined
+                    ? `${selectedResult.score}/100`
+                    : "NULL"}
+                </p>
               </div>
             </div>
 
             {/* Feedback Section */}
+            {/* {selectedResult.feedback && ( */}
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-3">
                 Feedback
               </h3>
               <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                <p className="text-gray-700">
-                  Great technical skills and cultural fit. We'd like to move
-                  forward with an offer.
-                </p>
+                <p className="text-gray-700">Feedback</p>
               </div>
             </div>
-
-            {/* Next Steps */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                Next Steps
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 h-5 w-5 text-green-500 mt-0.5">
-                    ✓
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-700">
-                      HR will contact you within 2 business days
-                    </p>
-                  </div>
-                </div>
-                {selectedResult.status === "Accepted" && (
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-green-500 mt-0.5">
-                      ✓
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-gray-700">
-                        Offer letter will be sent to your email
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* )} */}
           </div>
 
           {/* Footer */}
@@ -140,15 +115,14 @@ const CandidateResultsModal = ({ isOpen, onClose, selectedResult }) => {
   );
 };
 
-// Reuse the same badge styling from the table
 const getStatusBadge = (status) => {
   const base = "px-3 py-1 rounded-full text-xs font-semibold";
-  switch (status) {
-    case "Pending":
+  switch (status.toLowerCase()) {
+    case "pending":
       return `${base} bg-yellow-100 text-yellow-800`;
-    case "Rejected":
+    case "rejected":
       return `${base} bg-red-100 text-red-700`;
-    case "Accepted":
+    case "accepted":
       return `${base} bg-green-100 text-green-700`;
     default:
       return base;
