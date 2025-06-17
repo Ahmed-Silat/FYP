@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import CandidateJobCards from "../../Components/CandidateJobCards";
 import CandidateJobCards from "../../Components/CandidateJobCards";
+import { getUnappliedJobsByUserId } from "../../service/Job/JobQuestionService";
 
 const CandidateDashboard = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
   const userName = user?.user?.full_name;
+
+  const [jobs, setJobs] = useState([]);
+
+  const fetchJobs = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userId = userData?.user?.id;
+    const res = await getUnappliedJobsByUserId(userId);
+    setJobs(res.data);
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -16,9 +30,7 @@ const CandidateDashboard = () => {
           <p className="text-gray-500 text-sm mt-1">Welcome back 👋</p>
         </div>
 
-        <div>
-          {<CandidateJobCards/>}
-        </div>
+        <div>{<CandidateJobCards allJobs={jobs} refreshJobs={fetchJobs} />}</div>
       </div>
     </div>
   );

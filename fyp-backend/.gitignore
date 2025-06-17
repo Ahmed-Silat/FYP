@@ -15,6 +15,12 @@ dist-ssr
 
 .env
 
+# Ignore all files in the video folder
+Videos/*
+
+# But don't ignore the folder itself
+!Videos/.gitkeep
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import CandidateDashboardSlider from "./CandidateDashboardSlider";
-import { fetchJobs } from "../service/Job/JobQuestionService";
+import {
+  fetchJobs,
+  getUnappliedJobsByUserId,
+} from "../service/Job/JobQuestionService";
 
 const CandidateJobCards = () => {
   const [jobs, setJobs] = useState([]);
@@ -13,7 +16,9 @@ const CandidateJobCards = () => {
     const loadJobs = async () => {
       try {
         setIsLoading(true);
-        const jobsFromAPI = await fetchJobs();
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userId = userData?.user?.id;
+        const jobsFromAPI = await getUnappliedJobsByUserId(userId);
         setJobs(jobsFromAPI || []);
       } catch (error) {
         console.error("Failed to load jobs:", error);

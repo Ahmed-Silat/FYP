@@ -59,15 +59,19 @@ export const fetchJobs = async (userId) => {
       createdAt: job.createdAt,
       updatedAt: job.updatedAt,
       questions: job.questions || [],
-      user: job.user ? {
-        id: job.user.id,
-        full_name: job.user.full_name,
-        email: job.user.email,
-        company: job.user.company ? {
-          id: job.user.company.id,
-          company_name: job.user.company.company_name
-        } : null
-      } : null
+      user: job.user
+        ? {
+            id: job.user.id,
+            full_name: job.user.full_name,
+            email: job.user.email,
+            company: job.user.company
+              ? {
+                  id: job.user.company.id,
+                  company_name: job.user.company.company_name,
+                }
+              : null,
+          }
+        : null,
     }));
   } catch (error) {
     console.error("Error fetching jobs:", error);
@@ -117,7 +121,7 @@ export const deleteJob = async (jobId) => {
 export const getJobsByUserId = async (userId) => {
   try {
     const { data } = await axios.get(`${EXPRESS_API_URL}/job/user/${userId}`);
-    
+
     return data.map((job) => ({
       ...job,
       skills: Array.isArray(job.skills) ? job.skills : [],
@@ -125,6 +129,23 @@ export const getJobsByUserId = async (userId) => {
     }));
   } catch (error) {
     console.error("Error fetching jobs by user ID:", error);
+    throw error;
+  }
+};
+
+export const getUnappliedJobsByUserId = async (userId) => {
+  try {
+    const { data } = await axios.get(
+      `${EXPRESS_API_URL}/job/unappliedJobsByUser/${userId}`
+    );
+
+    return data.map((job) => ({
+      ...job,
+      skills: Array.isArray(job.skills) ? job.skills : [],
+      questions: job.questions || [],
+    }));
+  } catch (error) {
+    console.error("Error fetching unapplied jobs by user ID:", error);
     throw error;
   }
 };
