@@ -6,6 +6,8 @@ import User from "../../models/UserAuth/user.js";
 import Company from "../../models/Company/Company.js";
 
 import db from "../../db.js";
+import { Op } from "sequelize";
+import CandidateApplication from "../../models/CandidateApplication/CandidateApplication.js";
 
 export const createJobWithQuestions = async (req, res) => {
   const { job, questions } = req.body;
@@ -80,49 +82,53 @@ export const createJobWithQuestions = async (req, res) => {
   }
 };
 
-
 export const getAllJobsWithQuestions = async (req, res) => {
   try {
     const jobs = await Job.findAll({
       include: [
-        { 
-          model: Question, 
-          as: "questions" 
+        {
+          model: Question,
+          as: "questions",
         },
         {
           model: User,
           as: "user",
-          attributes: ['id', 'full_name', 'email'],
-          include: [{
-            model: Company,
-            as: "company",
-            attributes: ['id', 'company_name']
-          }]
-        }
+          attributes: ["id", "full_name", "email"],
+          include: [
+            {
+              model: Company,
+              as: "company",
+              attributes: ["id", "company_name"],
+            },
+          ],
+        },
       ],
-      order: [['createdAt', 'DESC']]
+      order: [["createdAt", "DESC"]],
     });
-    
+
     // Format the response to include all necessary data
-    const formattedJobs = jobs.map(job => ({
+    const formattedJobs = jobs.map((job) => ({
       ...job.toJSON(),
-      user: job.user ? {
-        ...job.user.toJSON(),
-        company: job.user.company ? job.user.company.toJSON() : null
-      } : null
+      user: job.user
+        ? {
+            ...job.user.toJSON(),
+            company: job.user.company ? job.user.company.toJSON() : null,
+          }
+        : null,
     }));
 
     res.json({
       success: true,
       count: jobs.length,
-      data: formattedJobs
+      data: formattedJobs,
     });
   } catch (error) {
     console.error("Detailed error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       error: "Failed to fetch jobs",
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -235,15 +241,59 @@ export const getJobsByUserId = async (req, res) => {
       ],
     });
 
-    if (jobs.length === 0) {
-      return res.status(404).json({ message: "No jobs found for this user." });
-    }
-
-    res.status(200).json(jobs);
+    res.status(200).json(jobs); // Always return 200 with jobs array (can be empty)
   } catch (error) {
     console.error("Error fetching jobs by user ID:", error);
     res
       .status(500)
       .json({ error: "Internal server error", details: error.message });
+  }
+};
+
+export const getUnappliedJobsByUserId = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Step 1: Get all job IDs the user has applied to
+    const appliedJobs = await CandidateApplication.findAll({
+      where: { user_id: userId },
+      attributes: ["job_id"],
+    });
+
+    const appliedJobIds = appliedJobs.map((app) => app.job_id);
+
+    // Step 2: Get jobs not applied to by the user
+    const jobs = await Job.findAll({
+      where: {
+        id: {
+          [Op.notIn]: appliedJobIds.length > 0 ? appliedJobIds : [0],
+        },
+      },
+      include: [
+        {
+          model: Question,
+          as: "questions", // Alias for Job-Question relation
+        },
+        {
+          model: User,
+          as: "user", // User who posted the job
+          attributes: { exclude: ["password"] },
+          include: [
+            {
+              model: Company, // Include the company user belongs to
+              as: "company", // if alias is defined in association
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching unapplied jobs:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      details: error.message,
+    });
   }
 };

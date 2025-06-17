@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import InterviewModal from "./InterviewModal";
+import { getUnappliedJobsByUserId } from "../service/Job/JobQuestionService";
 
 const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
   const [showInterviewModal, setShowInterviewModal] = useState(false);
@@ -21,9 +22,21 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  const fetchUnappliedJobs = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userId = userData?.user?.id;
+
+    try {
+      const res = await getUnappliedJobsByUserId(userId);
+      setJobs(res.data);
+    } catch (error) {
+      console.error("Failed to fetch unapplied jobs:", error);
+    }
+  };
+
   const handleApplyNow = () => {
     setShowInterviewModal(true);
-    // onClose(); 
+    // onClose();
   };
 
   const handleInterviewComplete = () => {
@@ -63,7 +76,10 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
             {jobDetails.user.company.company_name || "Company not specified"}
           </div>
           <div className="text-xs text-gray-400">
-            Posted {jobDetails.createdAt ? new Date(jobDetails.createdAt).toLocaleDateString() : "Date not available"}
+            Posted{" "}
+            {jobDetails.createdAt
+              ? new Date(jobDetails.createdAt).toLocaleDateString()
+              : "Date not available"}
           </div>
 
           <div>
@@ -76,7 +92,8 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
           <div>
             <h3 className="font-medium text-gray-700 mb-2">Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {Array.isArray(jobDetails.skills) && jobDetails.skills.length > 0 ? (
+              {Array.isArray(jobDetails.skills) &&
+              jobDetails.skills.length > 0 ? (
                 jobDetails.skills.map((skill, idx) => (
                   <span
                     key={idx}
@@ -86,7 +103,9 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
                   </span>
                 ))
               ) : (
-                <span className="text-gray-400 text-xs">No skills specified</span>
+                <span className="text-gray-400 text-xs">
+                  No skills specified
+                </span>
               )}
             </div>
           </div>
@@ -103,16 +122,16 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
       </div>
 
       {showInterviewModal && (
-  <InterviewModal
-    jobTitle={jobDetails.job_title}
-    questions={jobDetails.questions || []}
-    onComplete={() => {
-      handleInterviewComplete();
-      onClose(); // Close both modal and slider when interview is complete
-    }}
-    onClose={() => setShowInterviewModal(false)} // Just close the modal
-  />
-)}
+        <InterviewModal
+          jobTitle={jobDetails.job_title}
+          questions={jobDetails.questions || []}
+          onComplete={() => {
+            handleInterviewComplete();
+            onClose(); // Close both modal and slider when interview is complete
+          }}
+          onClose={() => setShowInterviewModal(false)} // Just close the modal
+        />
+      )}
     </>
   );
 };

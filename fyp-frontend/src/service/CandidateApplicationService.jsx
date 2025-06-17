@@ -15,3 +15,18 @@ export const getCandidatesWithApplicationCount = async () => {
   );
   return data;
 };
+
+export const createCandidateApplication = async (
+  score,
+  application_status,
+  user_id,
+  job_id
+) => {
+  const { data } = await axios.post(`${EXPRESS_API_URL}/applications/create`, {
+    score,
+    application_status,
+    user_id,
+    job_id,
+  });
+  return data;
+};

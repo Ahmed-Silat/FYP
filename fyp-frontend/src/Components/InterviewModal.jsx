@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
+import { uploadVideo } from "../service/VideoService";
+import { createCandidateApplication } from "../service/CandidateApplicationService";
 
 const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -12,6 +14,8 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
   const streamRef = useRef(null);
   const timerRef = useRef(null);
   const isStoppingRef = useRef(false);
+
+  const chunksRef = useRef([]);
 
   useEffect(() => {
     return () => {
@@ -37,7 +41,7 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
     }
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setRecordingStatus("ready");
@@ -45,6 +49,18 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
     } else {
       setCompleted(true);
       setRecordingStatus("completed");
+
+      try {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const user_id = userData?.user?.id;
+        const job_id = questions[0]?.job_id;
+
+        await createCandidateApplication(0, "Pending", user_id, job_id);
+        console.log("✅ Candidate application created.");
+      } catch (err) {
+        console.error("❌ Failed to create candidate application:", err);
+      }
+
       setTimeout(() => onComplete(), 3000);
     }
   };
@@ -84,8 +100,12 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
       const options = { mimeType: "video/webm;codecs=vp9" };
       mediaRecorderRef.current = new MediaRecorder(stream, options);
 
-      const chunks = [];
-      mediaRecorderRef.current.ondataavailable = (e) => chunks.push(e.data);
+      chunksRef.current = [];
+      mediaRecorderRef.current.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
       mediaRecorderRef.current.start(100);
     } catch (error) {
       console.error("Error accessing media devices:", error);
@@ -97,13 +117,42 @@ const InterviewModal = ({ jobTitle, questions = [], onComplete, onClose }) => {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (isStoppingRef.current) return;
     isStoppingRef.current = true;
 
     clearTimer();
+
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state !== "inactive") {
+      recorder.stop();
+    }
+
     stopMedia();
-    moveToNextQuestion();
+
+    // Wait a tiny bit for ondataavailable to complete
+    setTimeout(async () => {
+      const blob = new Blob(chunksRef.current, { type: "video/webm" });
+      const file = new File([blob], `question-${Date.now()}.webm`, {
+        type: "video/webm",
+      });
+
+      try {
+        const currentQuestion = questions[currentQuestionIndex];
+        const question_id = currentQuestion.id;
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const user_id = userData?.user?.id;
+
+        console.log("Uploading video for Question ID:", question_id);
+        console.log("User ID:", user_id);
+        await uploadVideo(question_id, user_id, file);
+        console.log("✅ Uploaded video for Question:", question_id);
+      } catch (error) {
+        console.error("❌ Failed to upload video:", error);
+      } finally {
+        moveToNextQuestion();
+      }
+    }, 500);
   };
 
   if (!questions || questions.length === 0) {

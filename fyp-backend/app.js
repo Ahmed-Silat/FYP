@@ -6,6 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 import cors from "cors";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
 // Middleware
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -28,6 +31,12 @@ app.use("/job", jobRoutes);
 // Video route
 import videoRoutes from "./routes/video.route.js";
 app.use("/videos", videoRoutes);
+
+// // Setup for static file serving
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// app.use("/videos", express.static(path.join(__dirname, "videos")));
 
 // Candidate Application route
 import candidateApplicationRoutes from "./routes/candidateApplication.route.js";
