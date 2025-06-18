@@ -5,21 +5,17 @@ import {
   getUnappliedJobsByUserId,
 } from "../service/Job/JobQuestionService";
 
-const CandidateJobCards = () => {
-  const [jobs, setJobs] = useState([]);
+const CandidateJobCards = ({ refreshJobs, allJobs }) => {
+  // const [jobs, setJobs] = useState([]);
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(jobs);
+  console.log(allJobs);
   useEffect(() => {
     const loadJobs = async () => {
       try {
         setIsLoading(true);
-        const userData = JSON.parse(localStorage.getItem("userData"));
-        const userId = userData?.user?.id;
-        const jobsFromAPI = await getUnappliedJobsByUserId(userId);
-        setJobs(jobsFromAPI || []);
       } catch (error) {
         console.error("Failed to load jobs:", error);
       } finally {
@@ -51,10 +47,10 @@ const CandidateJobCards = () => {
   return (
     <div className="bg-gray-100 min-h-screen w-full">
       <div className="flex flex-wrap p-6 gap-4">
-        {jobs.length === 0 ? (
+        {allJobs.length === 0 ? (
           <p className="text-gray-600 w-full">No jobs available currently.</p>
         ) : (
-          jobs.map((job) => (
+          allJobs.map((job) => (
             <div
               key={job.id}
               onClick={() => handleCardClick(job)}
@@ -101,6 +97,7 @@ const CandidateJobCards = () => {
           isOpen={isSliderOpen}
           onClose={handleCloseSlider}
           jobDetails={selectedJob}
+          refreshJobs={refreshJobs}
         />
       )}
     </div>
