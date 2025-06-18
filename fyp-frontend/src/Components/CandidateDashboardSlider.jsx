@@ -3,7 +3,12 @@ import { FaTimes } from "react-icons/fa";
 import InterviewModal from "./InterviewModal";
 import { getUnappliedJobsByUserId } from "../service/Job/JobQuestionService";
 
-const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
+const CandidateDashboardSlider = ({
+  isOpen,
+  onClose,
+  jobDetails,
+  refreshJobs,
+}) => {
   const [showInterviewModal, setShowInterviewModal] = useState(false);
 
   useEffect(() => {
@@ -127,7 +132,8 @@ const CandidateDashboardSlider = ({ isOpen, onClose, jobDetails }) => {
           questions={jobDetails.questions || []}
           onComplete={() => {
             handleInterviewComplete();
-            onClose(); // Close both modal and slider when interview is complete
+            onClose();
+            refreshJobs();
           }}
           onClose={() => setShowInterviewModal(false)} // Just close the modal
         />

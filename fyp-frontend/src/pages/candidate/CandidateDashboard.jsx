@@ -13,7 +13,8 @@ const CandidateDashboard = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const userId = userData?.user?.id;
     const res = await getUnappliedJobsByUserId(userId);
-    setJobs(res.data);
+    console.log("Fetched Jobs:", res);
+    setJobs(res);
   };
 
   useEffect(() => {
@@ -30,7 +31,9 @@ const CandidateDashboard = () => {
           <p className="text-gray-500 text-sm mt-1">Welcome back 👋</p>
         </div>
 
-        <div>{<CandidateJobCards allJobs={jobs} refreshJobs={fetchJobs} />}</div>
+        <div>
+          {<CandidateJobCards allJobs={jobs} refreshJobs={fetchJobs} />}
+        </div>
       </div>
     </div>
   );
