@@ -67,18 +67,36 @@ export const getAllCandidateApplications = async (req, res) => {
         {
           model: User,
           required: true,
+          attributes: ['id', 'full_name', 'email'] 
         },
         {
           model: Job,
           required: true,
-        },
+          include: [
+            {
+              model: User,
+              as: 'user', 
+              attributes: ['id', 'full_name', 'email'], 
+              include: [
+                {
+                  model: Company,
+                  attributes: ['id', 'company_name'] 
+                }
+              ]
+            }
+          ]
+        }
       ],
+      order: [['createdAt', 'DESC']] // Order by creation date (newest first)
     });
 
     res.status(200).json(applications);
   } catch (error) {
     console.error("Error fetching candidate applications:", error);
-    res.status(500).json({ error: "Failed to fetch candidate applications" });
+    res.status(500).json({ 
+      error: "Failed to fetch candidate applications",
+      details: error.message 
+    });
   }
 };
 

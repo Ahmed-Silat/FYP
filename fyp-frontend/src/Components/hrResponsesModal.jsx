@@ -1,9 +1,32 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MdClose } from "react-icons/md";
+import { updateCandidateApplication } from "../service/CandidateApplicationService";
 
-const HrResponsesModal = ({ candidate, onClose }) => {
+const HrResponsesModal = ({ application, onClose }) => {
   const modalRef = useRef(null);
-  const [selectedStatus, setSelectedStatus] = useState("In Review");
+  const [selectedStatus, setSelectedStatus] = useState(
+    application?.application_status || "In Review"
+  );
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Unknown date";
+
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(dateString).toLocaleDateString("en-US", options);
+  };
+
+  useEffect(() => {
+    if (application) {
+      setSelectedStatus(application.application_status);
+    }
+  }, [application]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,9 +50,10 @@ const HrResponsesModal = ({ candidate, onClose }) => {
     };
   }, [onClose]);
 
-  if (!candidate) return null;
+  if (!application) return null;
 
   const getScoreColor = (score) => {
+    if (!score) return "text-gray-600";
     if (score >= 80) return "text-green-600";
     if (score >= 70) return "text-yellow-600";
     return "text-red-600";
@@ -46,9 +70,21 @@ const HrResponsesModal = ({ candidate, onClose }) => {
     }
   };
 
-  const handleStatusChange = (status) => {
+  const handleStatusChange = async (status) => {
     setSelectedStatus(status);
-    console.log("Status changed to:", status);
+    setIsUpdating(true);
+
+    try {
+      await updateCandidateApplication(application.id, {
+        application_status: status,
+      });
+      // You might want to add a success notification here
+    } catch (error) {
+      console.error("Error updating status:", error);
+      // You might want to add an error notification here
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -61,10 +97,11 @@ const HrResponsesModal = ({ candidate, onClose }) => {
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start z-10">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
-              {candidate.name}'s Application
+              {application.User.full_name}'s Application
             </h2>
             <p className="text-gray-600 mt-1">
-              {candidate.jobTitle} - Submitted on {candidate.date}
+              {application.Job.job_title} - Submitted on{" "}
+              {formatDate(application.createdAt)}
             </p>
           </div>
           <button
@@ -86,11 +123,13 @@ const HrResponsesModal = ({ candidate, onClose }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-gray-500">Name</h4>
-                <p className="mt-1 text-gray-900">{candidate.name}</p>
+                <p className="mt-1 text-gray-900">
+                  {application.User.full_name}
+                </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-gray-500">Email</h4>
-                <p className="mt-1 text-gray-900">{candidate.email}</p>
+                <p className="mt-1 text-gray-900">{application.User.email}</p>
               </div>
             </div>
           </div>
@@ -98,32 +137,46 @@ const HrResponsesModal = ({ candidate, onClose }) => {
           {/* Score */}
           <div className="bg-gray-50 p-6 rounded-lg text-center">
             <h3 className="text-sm font-medium text-gray-500">Overall Score</h3>
-            <p className={`mt-2 text-4xl font-bold ${getScoreColor(candidate.score)}`}>
-              {candidate.score}/100
+            <p
+              className={`mt-2 text-4xl font-bold ${getScoreColor(
+                application.score
+              )}`}
+            >
+              {application.score
+                ? `${application.score}/100`
+                : "Not scored yet"}
             </p>
-            <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className={`${getScoreColor(candidate.score).replace("text", "bg")} h-full`}
-                style={{ width: `${candidate.score}%` }}
-              ></div>
-            </div>
+            {application.score && (
+              <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className={`${getScoreColor(application.score).replace(
+                    "text",
+                    "bg"
+                  )} h-full`}
+                  style={{ width: `${application.score}%` }}
+                ></div>
+              </div>
+            )}
           </div>
 
           {/* Status */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Status</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Application Status
+            </h3>
             <div className="flex flex-wrap gap-3">
               {["In Review", "Shortlist", "Reject"].map((status) => (
                 <button
                   key={status}
                   onClick={() => handleStatusChange(status)}
+                  disabled={isUpdating}
                   className={`px-4 py-2 rounded-lg font-medium transition cursor-pointer ${getStatusColor(
                     status
                   )} ${
                     selectedStatus === status
                       ? "ring-2 ring-offset-2 ring-gray-400"
                       : ""
-                  }`}
+                  } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {status}
                 </button>
