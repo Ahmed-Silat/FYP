@@ -45,3 +45,31 @@ export const getApplicationsByUserId = async (userId) => {
     return []; // Return empty array for 404 errors
   }
 };
+
+
+// In your API client file
+export const getAllCandidateApplications = async () => {
+  try {
+    const { data } = await axios.get(
+      `${EXPRESS_API_URL}/applications/getAll`
+    );
+    return data;
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    throw error;
+  }
+};
+
+// Add this to your existing API client file (where you have other API calls)
+export const updateCandidateApplication = async (id, updateData) => {
+  try {
+    const { data } = await axios.put(
+      `${EXPRESS_API_URL}/applications/updateApplication/${id}`,
+      updateData
+    );
+    return data;
+  } catch (error) {
+    console.error("Error updating application:", error);
+    throw error;
+  }
+};
