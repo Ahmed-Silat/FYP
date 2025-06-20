@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import "./App.css";
 import Login from "./pages/login-signup/Login";
 import {
@@ -36,18 +36,21 @@ function App() {
     );
   }
 
-  // Protected Route Wrapper
   const ProtectedRoute = ({ children, roles }) => {
-    if (!user) {
-      return <Navigate to="/login" replace />;
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    if (roles && !roles.includes(userData?.user?.role)) {
-      return <Navigate to="/" replace />;
-    }
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-    return children ? children : <Outlet />;
-  };
+  if (roles && !roles.includes(userData?.user?.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children ? children : <Outlet />;
+};
 
   return (
     <Router>

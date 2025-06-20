@@ -27,43 +27,45 @@ const Login = () => {
     setError("");
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      setError("");
-      setSuccess("");
+const handleLogin = async (e) => {
+  e.preventDefault();
+  if (!isSigningIn) {
+    setIsSigningIn(true);
+    setError("");
+    setSuccess("");
+    
+    try {
+      const userCred = await doSignInWithEmailAndPassword(email, password);
+      const firebaseId = userCred.user.uid;
+
+      const userData = await login(firebaseId);
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // Update both states before navigating
+      setUser(userCred.user);
+      setUserData(userData);
       
-      try {
-        const userCred = await doSignInWithEmailAndPassword(email, password);
-        const firebaseId = userCred.user.uid;
+      setSuccess("Successfully logged in! Redirecting...");
 
-        const userData = await login(firebaseId);
-        localStorage.setItem("userData", JSON.stringify(userData));
-
-        setUser(userCred.user);
-        setUserData(userData);
-        
-        setSuccess("Successfully logged in! Redirecting...");
-
-        if (userData.user.role === "candidate") {
-          navigate("/candidate/dashboard");
-        } else if (userData.user.role === "hr") {
-          navigate("/hr/dashboard");
-        } else if (userData.user.role === "admin") {
-          navigate("/admin/dashboard");
-        }
-      } catch (error) {
-        setError("Invalid email or password. Please try again.");
-      } finally {
-        setIsSigningIn(false);
+      // Navigate based on role
+      if (userData.user.role === "candidate") {
+        navigate("/candidate/dashboard");
+      } else if (userData.user.role === "hr") {
+        navigate("/hr/dashboard");
+      } else if (userData.user.role === "admin") {
+        navigate("/admin/dashboard");
       }
+    } catch (error) {
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setIsSigningIn(false);
     }
-  };
+  }
+};
 
-  return (
+return (
     <>
-      {user && <Navigate to="/" replace={true} />}
+      {/* {user && <Navigate to="/" replace={true} />} */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4" style={{ backgroundColor: '#F8FAFC' }}>
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
           <div className="text-center mb-8">

@@ -1,5 +1,5 @@
 // src/contexts/authContext/index.jsx
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { login } from "../../service/AuthService";
@@ -15,47 +15,52 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      // ✅ Only update if user changed
-      setUser((prevUser) => {
-        if (prevUser?.uid === authUser?.uid) return prevUser;
-        return authUser;
-      });
+      // Skip update if user hasn't changed
+      if (user?.uid === authUser?.uid) {
+        setLoading(false);
+        return;
+      }
 
       if (authUser) {
-        const storedData = localStorage.getItem("userData");
-        if (storedData) {
-          setUserData(JSON.parse(storedData));
-        } else {
-          try {
-            const data = await login(authUser.uid);
-            localStorage.setItem("userData", JSON.stringify(data));
-            setUserData(data);
-          } catch (error) {
-            console.error("Failed to fetch user data:", error);
+        try {
+          // Always try to get fresh data from API first
+          const data = await login(authUser.uid);
+          localStorage.setItem("userData", JSON.stringify(data));
+          setUser(authUser);
+          setUserData(data);
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+          // Fallback to localStorage if API fails
+          const storedData = localStorage.getItem("userData");
+          if (storedData) {
+            setUserData(JSON.parse(storedData));
           }
+          setUser(authUser);
         }
       } else {
+        // User signed out
+        setUser(null);
         setUserData(null);
         localStorage.removeItem("userData");
       }
-
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [user?.uid]); // Only re-run if user.uid changes
 
-  const value = {
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     user,
     userData,
     loading,
     setUser,
     setUserData,
-  };
+  }), [user, userData, loading]);
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }
